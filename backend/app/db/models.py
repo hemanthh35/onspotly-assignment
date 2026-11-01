@@ -148,6 +148,15 @@ class CostRecord(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, index=True)
 
 
+class AppSetting(Base):
+    """Platform-wide settings editable from the UI (e.g. where analysis runs)."""
+    __tablename__ = "app_settings"
+
+    key: Mapped[str] = mapped_column(String(80), primary_key=True)
+    value: Mapped[dict] = mapped_column(JSON, default=dict)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
+
+
 class ActivityEvent(Base):
     __tablename__ = "activity_events"
 

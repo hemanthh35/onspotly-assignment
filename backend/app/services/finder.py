@@ -26,11 +26,13 @@ import numpy as np
 from app.core.config import settings
 from app.pipeline.analyze import load_arrays, overall_quality
 
+# Generic "none of the above" classes. Blur and darkness are deliberately NOT here: the measured
+# quality score already handles them, and a "dark photo" class would wrongly reject dim but
+# correct scenes (stage shows, evening events).
 BACKGROUND = [
-    "a blurry out of focus photo",
-    "a very dark photo",
     "a random everyday scene",
     "a close-up of an object on a table",
+    "an empty room",
 ]
 LOGIT_SCALE = 100.0
 NEG_MARGIN = 0.015  # cosine margin a look-alike needs before it suppresses a shot
@@ -80,6 +82,10 @@ class Candidate:
     query: str = ""
     audio_text: str = ""
     notes: list[str] = field(default_factory=list)
+    scene: float = -1.0  # start of the scene (take) this window belongs to
+
+    def same_scene(self, other: "Candidate") -> bool:
+        return self.file.asset_id == other.file.asset_id and self.scene == other.scene and self.scene >= 0
 
     def as_dict(self, with_quality: bool = True) -> dict:
         d = {"file": self.file.filename, "start": round(self.start, 2), "end": round(self.end, 2),
@@ -286,7 +292,7 @@ def search_hybrid(shots: list[dict], footage: list[FootageFile], clip, progress:
         cands: list[Candidate] = []
         for f in footage:
             pf = probs[f.asset_id][:, i]
-            best_per_scene: dict[float, Candidate] = {}
+            per_scene: dict[float, list[Candidate]] = {}
             for sc, a, b in _windows(f, L):
                 m = (f.t_c >= a) & (f.t_c <= b)
                 if not m.any():
@@ -294,10 +300,19 @@ def search_hybrid(shots: list[dict], footage: list[FootageFile], clip, progress:
                 vis = float(pf[m].mean())
                 q = f.quality(a, b)
                 score = vis * (0.55 + 0.45 * q["overall"])
-                key = sc["start"]
-                if key not in best_per_scene or score > best_per_scene[key].score:
-                    best_per_scene[key] = Candidate(f, a, b, vis, q, score)
-            for c in best_per_scene.values():
+                per_scene.setdefault(sc["start"], []).append(Candidate(f, a, b, vis, q, score, scene=sc["start"]))
+            # Keep the best window of each scene plus up to two non-overlapping runners-up, so a
+            # long take can serve two shots (e.g. "regulars smiling" and the spoken thank-you).
+            picked: list[Candidate] = []
+            for wins in per_scene.values():
+                chosen: list[Candidate] = []
+                for c in sorted(wins, key=lambda c: c.score, reverse=True):
+                    if len(chosen) == 3:
+                        break
+                    if all(min(c.end, o.end) - max(c.start, o.start) <= 0 for o in chosen):
+                        chosen.append(c)
+                picked.extend(chosen)
+            for c in picked:
                 m = (f.t_c >= c.start) & (f.t_c <= c.end)
                 c.query = _best_query(bank, i, f.emb[m])
                 if c.end - c.start < L - 0.25:
@@ -361,7 +376,8 @@ def assign(shots: list[dict], per_shot: list[list[Candidate]], threshold: float)
         if i in chosen:
             best = chosen[i]
             # Only alternatives an editor could plausibly use; near-zero matches are noise.
-            alts = [c for c in cs if c is not best and not _same_take(c, best) and c.score >= threshold / 2]
+            alts = [c for c in cs if c is not best and not _same_take(c, best) and not c.same_scene(best)
+                    and c.score >= threshold / 2]
             alts = _dedupe(alts)[:2]
             results.append({"shot_id": shot["shot_id"], "status": "found", "best": best.as_dict(),
                             "alternatives": [a.as_dict(with_quality=True) for a in alts]})
@@ -388,9 +404,10 @@ def _same_take(a: Candidate, b: Candidate) -> bool:
 
 
 def _dedupe(cs: list[Candidate]) -> list[Candidate]:
+    """One candidate per take: drops overlapping windows and other windows of the same scene."""
     out: list[Candidate] = []
     for c in cs:
-        if not any(_same_take(c, o) for o in out):
+        if not any(_same_take(c, o) or c.same_scene(o) for o in out):
             out.append(c)
     return out
 

@@ -16,17 +16,47 @@ def _get():
         if _model is None:
             from faster_whisper import WhisperModel
 
-            _model = WhisperModel(settings.whisper_model, device="cpu", compute_type="int8")
+            dev, ctype = _device()
+            _model = WhisperModel(settings.whisper_model, device=dev, compute_type=ctype)
         return _model
 
 
+def _device() -> tuple[str, str]:
+    try:
+        import ctranslate2
+
+        if ctranslate2.get_cuda_device_count() > 0:
+            return "cuda", "float16"
+    except Exception:
+        pass
+    return "cpu", "int8"
+
+
 def model_name() -> str:
-    return f"faster-whisper {settings.whisper_model} (int8, CPU)"
+    dev, ctype = _device()
+    return f"faster-whisper {settings.whisper_model} ({ctype}, {dev.upper()})"
+
+
+def _transcribe_raw(path: Path):
+    global _model
+    try:
+        segments, info = _get().transcribe(str(path), word_timestamps=True, vad_filter=True)
+        return list(segments), info
+    except (RuntimeError, OSError) as exc:
+        # GPU runtimes sometimes lack the cuDNN build CTranslate2 expects; speech is cheap, use CPU.
+        if "cuda" not in str(exc).lower() and "cudnn" not in str(exc).lower() and "cublas" not in str(exc).lower():
+            raise
+        from faster_whisper import WhisperModel
+
+        with _lock:
+            _model = WhisperModel(settings.whisper_model, device="cpu", compute_type="int8")
+        segments, info = _model.transcribe(str(path), word_timestamps=True, vad_filter=True)
+        return list(segments), info
 
 
 def transcribe(path: Path) -> dict:
     """Returns {language, segments: [{start, end, text, confidence, words: [{w, start, end, p}]}]}."""
-    segments, info = _get().transcribe(str(path), word_timestamps=True, vad_filter=True)
+    segments, info = _transcribe_raw(path)
     out = []
     for s in segments:
         # Drop hallucinated segments on music / ambience.

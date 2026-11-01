@@ -38,7 +38,7 @@ def _asset(a: Asset) -> dict:
     return {"id": a.id, "filename": a.filename, "size_bytes": a.size_bytes, "duration": a.duration,
             "width": a.width, "height": a.height, "fps": a.fps, "has_audio": a.has_audio,
             "analysis_status": a.analysis_status, "scenes": an.get("scenes", []),
-            "transcript": an.get("transcript", {}).get("segments", []),
+            "transcript": an.get("transcript", {}).get("segments", []), "compute": an.get("compute"),
             "kind": "music" if a.filename.startswith("_music") else "video", "created_at": a.created_at}
 
 

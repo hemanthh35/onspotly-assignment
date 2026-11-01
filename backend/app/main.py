@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.api.v1 import admin, projects
+from app.api.v1 import admin, projects, settings as settings_api
 from app.core.config import ROOT_DIR, settings
 from app.db.session import init_db
 from app.providers.storage import storage
@@ -18,6 +18,7 @@ app = FastAPI(title=settings.app_name, version="1.0.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 app.include_router(projects.router, prefix="/api/v1")
 app.include_router(admin.router, prefix="/api/v1")
+app.include_router(settings_api.router, prefix="/api/v1")
 
 
 @app.on_event("startup")

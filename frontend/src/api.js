@@ -75,6 +75,9 @@ export const api = {
   musicUrl: (assetId) => `${BASE}/assets/${assetId}/stream`,
   render: (id, options) => request(`/runs/${id}/render`, { method: 'POST', body: options }),
   job: (id) => request(`/jobs/${id}`),
+  compute: () => request('/settings/compute'),
+  saveCompute: (body) => request('/settings/compute', { method: 'PUT', body }),
+  testCompute: (body) => request('/settings/compute/test', { method: 'POST', body }),
 }
 
 /** The run the editor/export should show: ?run= if set, else the newest hybrid run, else the newest. */

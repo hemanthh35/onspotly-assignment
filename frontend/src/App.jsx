@@ -1,8 +1,22 @@
 import { Link, Route, Routes, useLocation } from 'react-router-dom'
-import { Plus, LayoutGrid } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { Plus, LayoutGrid, Cpu, Zap } from 'lucide-react'
+import { api } from './api.js'
 import Projects from './pages/Projects.jsx'
 import NewProject from './pages/NewProject.jsx'
 import Project from './pages/Project.jsx'
+import Settings from './pages/Settings.jsx'
+
+function ComputeBadge() {
+  const { data } = useQuery({ queryKey: ['compute'], queryFn: api.compute, staleTime: 30000 })
+  const remote = data?.mode === 'remote'
+  return (
+    <Link to="/settings" title="Where video analysis runs" className="btn btn-sm text-white/70 hover:text-white">
+      {remote ? <Zap size={14} className="text-amber-300" /> : <Cpu size={14} />}
+      <span className="hidden sm:inline">{remote ? 'Colab GPU' : 'Local CPU'}</span>
+    </Link>
+  )
+}
 
 function Logo() {
   return (
@@ -25,6 +39,7 @@ export default function App() {
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Logo />
           <nav className="flex items-center gap-1.5">
+            <ComputeBadge />
             <Link to="/" className={`btn btn-sm ${pathname === '/' ? 'bg-white/10 text-white' : 'text-white/70 hover:text-white'}`}>
               <LayoutGrid size={15} /> <span className="hidden sm:inline">Projects</span>
             </Link>
@@ -39,6 +54,7 @@ export default function App() {
           <Route path="/" element={<Projects />} />
           <Route path="/new" element={<NewProject />} />
           <Route path="/p/:id/*" element={<Project />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </main>
     </div>

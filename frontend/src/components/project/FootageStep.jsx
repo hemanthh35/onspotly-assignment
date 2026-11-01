@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { ArrowRight, Mic, Trash2, Film, RefreshCw } from 'lucide-react'
+import { ArrowRight, Mic, Trash2, Film, RefreshCw, Cpu, Zap } from 'lucide-react'
 import clsx from 'clsx'
 import { api, fmtBytes, fmtTime, thumbUrl } from '../../api.js'
 import { Dropzone, Empty, JobCard, Progress, StatusChip } from '../ui.jsx'
@@ -26,6 +28,7 @@ function SceneStrip({ asset }) {
 
 export default function FootageStep({ project, refresh, next }) {
   const [uploading, setUploading] = useState(null)
+  const { data: compute } = useQuery({ queryKey: ['compute'], queryFn: api.compute, staleTime: 30000 })
   const videos = project.assets.filter((a) => a.kind === 'video')
   const jobs = project.jobs.filter((j) => j.kind === 'analyze').slice(0, 3)
   const active = jobs.filter((j) => ['queued', 'running'].includes(j.status))
@@ -66,6 +69,7 @@ export default function FootageStep({ project, refresh, next }) {
                     <p className="text-xs text-muted">{fmtTime(a.duration)} · {a.width}×{a.height} · {a.fps} fps · {fmtBytes(a.size_bytes)}</p>
                   </div>
                   <div className="flex shrink-0 items-center gap-1.5">
+                    {a.compute && <span className={`chip ${a.compute === 'remote-gpu' ? 'bg-amber-50 text-amber-700' : 'bg-stone-100 text-muted'}`}>{a.compute === 'remote-gpu' ? 'Colab GPU' : 'CPU'}</span>}
                     <StatusChip status={a.analysis_status} />
                     <button onClick={() => del(a)} aria-label={`Remove ${a.filename}`} className="rounded-lg p-1.5 text-muted hover:bg-stone-100 hover:text-brand"><Trash2 size={14} /></button>
                   </div>
@@ -97,6 +101,11 @@ export default function FootageStep({ project, refresh, next }) {
             <RefreshCw size={15} /> Re-run analysis
           </button>
         )}
+        <Link to="/settings" className="card flex items-center gap-3 p-4 text-sm hover:border-ink/30">
+          {compute?.mode === 'remote' ? <Zap size={16} className="text-amber-500" /> : <Cpu size={16} className="text-muted" />}
+          <span className="flex-1">Analysis runs on <b>{compute?.mode === 'remote' ? 'Google Colab GPU' : 'this computer (CPU)'}</b></span>
+          <span className="text-xs font-semibold text-brand">Change</span>
+        </Link>
         <div className="card p-4 text-sm">
           <p className="font-semibold">What the analysis does</p>
           <ul className="mt-2 space-y-1.5 text-xs leading-relaxed text-muted">

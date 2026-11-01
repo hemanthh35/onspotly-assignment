@@ -39,6 +39,19 @@ Copy `.env.example` to `.env`. **Everything is optional**; the platform falls ba
 | `ADMIN_PASSWORD` | admin dashboard requires login | admin is open (local dev) |
 | `PRICE_*` | unit prices used by the cost tracker | sensible defaults |
 
+### Optional: free GPU analysis on Google Colab
+
+Analysis (CLIP + Whisper) is the slow step on a CPU. To offload it to a free Colab T4:
+
+1. Upload [`notebooks/colab_gpu_worker.ipynb`](notebooks/colab_gpu_worker.ipynb) to https://colab.research.google.com
+2. `Runtime → Change runtime type → T4 GPU`, then `Runtime → Run all`
+3. Copy the printed **Worker URL** + **token** into Studio → **Settings** (the CPU/GPU badge in the header) →
+   *Google Colab GPU* → *Test connection* → *Save*
+
+The notebook runs the same analysis code (`backend/app/worker.py`) behind a free Cloudflare
+tunnel, protected by the random token. If the Colab session ends, jobs fall back to local CPU
+automatically (logged in the admin activity feed). Each analysed file shows a `Colab GPU` or `CPU` chip.
+
 ### Reproduce the assignment deliverables
 
 With the server running:
@@ -90,6 +103,8 @@ backend/app/
   core/          config.py (settings, prices, provider selection)
   db/            SQLAlchemy models + session (Postgres or SQLite)
   providers/     storage (Supabase/local) · llm (OpenAI) · vision (OpenCLIP) · speech (Whisper)
+                 · compute (local CPU or remote GPU worker)
+  worker.py      standalone analysis worker (run on Colab GPU via notebooks/colab_gpu_worker.ipynb)
   pipeline/      analyze.py (scenes, quality, embeddings, transcript)
   services/      planner · finder · exporter · tracking (cost + activity)
   workers/       jobs.py (background jobs, timings, resource usage) · handlers.py

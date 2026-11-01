@@ -30,10 +30,28 @@ def _analyze_asset(ctx: JobContext, asset_id: str, lo: float, hi: float) -> None
         a = db.get(Asset, asset_id)
         key, name = a.storage_key, a.filename
         a.analysis_status = "running"
+    from app.providers.compute import analyze_remote, get_compute
+
+    cfg = get_compute()
+    report = lambda p, m: ctx.progress(lo + (hi - lo) * p, f"{name}: {m}")
     try:
         path = storage.local_path(key)
-        with heavy_lock:
-            summary = analyze_video(asset_id, path, lambda p, m: ctx.progress(lo + (hi - lo) * p, f"{name}: {m}"))
+        summary = None
+        if cfg["mode"] == "remote" and cfg["remote_url"]:
+            try:
+                summary = analyze_remote(cfg, asset_id, path, report)
+                summary["compute"] = "remote-gpu"
+            except Exception as exc:
+                if not cfg.get("fallback_to_local", True):
+                    raise
+                with session_scope() as db:
+                    log_activity(db, "compute.fallback", f"Colab worker failed for {name} ({exc}); using local CPU",
+                                 ctx.project_id, asset_id=asset_id)
+                report(0.0, "Colab unavailable, falling back to local CPU")
+        if summary is None:
+            with heavy_lock:
+                summary = analyze_video(asset_id, path, report)
+            summary["compute"] = "local-cpu"
     except Exception:
         with session_scope() as db:
             db.get(Asset, asset_id).analysis_status = "failed"
@@ -43,8 +61,9 @@ def _analyze_asset(ctx: JobContext, asset_id: str, lo: float, hi: float) -> None
         a.analysis, a.analysis_status = summary, "done"
         a.duration, a.width, a.height = summary["duration"], summary["width"], summary["height"]
         a.fps, a.has_audio = summary["fps"], summary["has_audio"]
-        log_activity(db, "asset.analyzed", f"Analysed {name} ({summary['duration']:.0f}s, "
-                     f"{len(summary['scenes'])} scenes)", a.project_id, asset_id=asset_id)
+        where = "Colab GPU" if summary.get("compute") == "remote-gpu" else "local CPU"
+        log_activity(db, "asset.analyzed", f"Analysed {name} on {where} ({summary['duration']:.0f}s, "
+                     f"{len(summary['scenes'])} scenes)", a.project_id, asset_id=asset_id, compute=summary.get("compute"))
 
 
 @handler("analyze")
