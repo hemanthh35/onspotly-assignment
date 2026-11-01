@@ -8,6 +8,19 @@ import clsx from 'clsx'
 import { api } from '../../api.js'
 import { Empty, JobCard, Segmented } from '../ui.jsx'
 
+const SOURCE = { ai: 'AI', rules: 'Rule-based', reference: 'Imported', manual: 'Manual' }
+
+/** "today 01:44", "yesterday 18:20" or "2 Nov, 18:20". */
+function when(d) {
+  const t = new Date(d)
+  const time = t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  const today = new Date()
+  const y = new Date(); y.setDate(today.getDate() - 1)
+  if (t.toDateString() === today.toDateString()) return `today ${time}`
+  if (t.toDateString() === y.toDateString()) return `yesterday ${time}`
+  return `${t.toLocaleDateString([], { day: 'numeric', month: 'short' })}, ${time}`
+}
+
 function ShotRow({ shot, index, onChange, onRemove }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: shot.shot_id })
   return (
@@ -114,6 +127,20 @@ export default function ShotListStep({ project, refresh, next }) {
     setActiveId(sl.id); setDirty(false); refresh()
   }
 
+  async function removeList() {
+    const runs = project.runs.filter((r) => r.shot_list_id === active.id).length
+    const msg = `Delete “${active.name}” (${when(active.created_at)})?` +
+      (runs ? `\n\nIts ${runs} shot search result${runs > 1 ? 's' : ''} will be deleted too. Rendered videos stay in Versions.` : '')
+    if (!confirm(msg)) return
+    try {
+      await api.deleteShotList(active.id)
+      toast.success('Shot list deleted')
+      setDirty(false)
+      setActiveId(lists.filter((l) => l.id !== active.id).at(-1)?.id)
+      refresh()
+    } catch (e) { toast.error(e.message) }
+  }
+
   async function find() {
     if (dirty) await save(true)
     try {
@@ -153,12 +180,23 @@ export default function ShotListStep({ project, refresh, next }) {
         {toolbar}
         <div className="flex flex-wrap items-center gap-2">
           {lists.length > 1 && (
-            <select className="input w-auto py-2" value={active.id} onChange={(e) => { if (!dirty || confirm('Discard unsaved changes?')) { setDirty(false); setActiveId(e.target.value) } }}>
-              {lists.map((l) => <option key={l.id} value={l.id}>{l.name} · {l.shots.length} shots</option>)}
+            <select className="input w-full py-2 sm:w-auto" value={active.id} aria-label="Choose shot list"
+              onChange={(e) => { if (!dirty || confirm('Discard unsaved changes?')) { setDirty(false); setActiveId(e.target.value) } }}>
+              {[...lists].reverse().map((l, i) => (
+                <option key={l.id} value={l.id}>
+                  {l.name} · {l.shots.length} shots · {SOURCE[l.source] || l.source} · {when(l.created_at)}{i === 0 ? ' (newest)' : ''}
+                </option>
+              ))}
             </select>
           )}
           <input className="input w-auto min-w-0 flex-1 py-2 font-semibold" value={name} onChange={(e) => { setName(e.target.value); setDirty(true) }} aria-label="Shot list name" />
-          <span className="chip bg-stone-100 text-muted">{active.source === 'ai' ? `AI · ${active.meta?.model}` : active.source}</span>
+          <span className="chip bg-stone-100 text-muted" title={`Created ${new Date(active.created_at).toLocaleString()}`}>
+            {active.source === 'ai' ? `AI · ${active.meta?.model}` : SOURCE[active.source] || active.source} · {when(active.created_at)}
+          </span>
+          <button onClick={removeList} aria-label="Delete this shot list" title="Delete this shot list"
+            className="grid h-9 w-9 place-items-center rounded-lg border border-line bg-white text-muted hover:border-brand hover:text-brand">
+            <Trash2 size={15} />
+          </button>
         </div>
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={({ active: a, over }) => {
           if (over && a.id !== over.id) {
