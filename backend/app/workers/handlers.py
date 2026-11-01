@@ -200,12 +200,17 @@ def results_payload(run_id: str) -> tuple[str, str]:
     with session_scope() as db:
         run = db.get(FinderRun, run_id)
         p = run.project
-        jobs = [j for j in p.jobs if j.status == "done" and j.kind in ("analyze", "find")]
-        seconds = round(sum(j.wall_seconds for j in jobs), 1)
+        # Time for THIS result: the analysis of the footage (first full analysis job) + the search
+        # that produced this run. Not every job ever run on the project.
+        analyses = sorted((j for j in p.jobs if j.status == "done" and j.kind == "analyze"), key=lambda j: j.created_at)
+        search = next((j for j in p.jobs if j.kind == "find" and (j.result or {}).get("run_id") == run_id), None)
+        analysis_s = round(analyses[0].wall_seconds, 1) if analyses else 0.0
+        search_s = round(search.wall_seconds, 1) if search else 0.0
         models = sorted({m for a in p.assets for m in (a.analysis or {}).get("models", {}).values() if m})
         sl = db.get(ShotList, run.shot_list_id)
         llm = (sl.meta or {}).get("model")
-        processing = {"seconds": seconds, "machine": exporter.machine_info(),
+        processing = {"seconds": round(analysis_s + search_s, 1), "analysis_seconds": analysis_s,
+                      "search_seconds": search_s, "machine": exporter.machine_info(),
                       "models": models + ([f"{llm} (shot planning / search hints)"] if llm else []),
                       "approach": run.approach, "shot_list": sl.name}
         doc = exporter.results_document(p.name, run.results.get("source_files", []), run.results.get("shots", []),

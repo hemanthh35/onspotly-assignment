@@ -380,7 +380,7 @@ slide("Limits, trade-offs & next steps", "What it does not do yet, what we trade
 s.text(80, 185, "TRADE-OFFS", 20, ORANGE, w=500)
 s.text(690, 185, "KNOWN GAPS", 20, RED, w=500)
 s.text(1300, 185, "NEXT · WITH 2 MORE WEEKS", 20, GREEN, w=540)
-trade = ["Strict threshold: never fakes a shot ⇄ can drop a dim but correct take",
+trade = ["Strict threshold: never fakes a shot ⇄ a correct take can fall under it when hints are off",
          "CPU only: free and offline ⇄ about 0.7× realtime analysis", "LLM search hints: work for any brief ⇄ least predictable part",
          "Supabase in London: managed ⇄ ~190 ms per query from India", "Preview plays hard cuts: instant ⇄ fades only in the export"]
 gaps = ["Thresholds tuned on one footage set", "Colab worker tested with a local stand-in, not on real Colab",

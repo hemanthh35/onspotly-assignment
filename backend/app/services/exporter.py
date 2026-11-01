@@ -34,7 +34,9 @@ def machine_info() -> str:
             cpu = name or cpu
     except Exception:
         pass
-    ram = round(psutil.virtual_memory().total / 2**30)
+    # Windows reports usable memory (e.g. 15.4 GiB on a 16 GB machine); report the installed size.
+    import math
+    ram = math.ceil(psutil.virtual_memory().total / 2**30)
     return f"{cpu}, {psutil.cpu_count(logical=False)} cores / {psutil.cpu_count()} threads, {ram} GB RAM, no GPU (CPU only)"
 
 

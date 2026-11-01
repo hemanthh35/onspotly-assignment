@@ -65,14 +65,18 @@ coming to our grand opening today."
 never used for tuning; their titles become shots and two absent shots are added): **5 / 6 correct**.
 Coffee pour, pastry and smiling friends were found in the right clip, and "ribbon cutting" and
 "dog on a beach" were correctly reported missing (score 0.00). **Failure:** "Applauding at the
-end of a stage show" scored 0.19 < 0.25 and was reported missing; the clip is dark stage footage
-and the quality weighting pushed a correct match under the threshold.
+end of a stage show" scored 0.19 < 0.25 and was reported missing. Investigating it showed the visual
+match itself is strong (0.93 per frame without search hints); the cause is the LLM-written
+look-alikes ("performers actively acting or dancing on stage", similarity 0.80 to the shot itself)
+being too close to the shot and pulling it under the threshold. Fix for later: drop look-alikes
+that are too similar to their own shot, the same way look-alikes similar to *other* shots are dropped.
 
 ## 3. What failed or is weak (honestly)
 
 - **Thresholds were tuned on this footage.** The 100 % above is on data I iterated on. The
   practice set is the honest number for unseen footage, and it already shows the trade-off:
-  a stricter threshold avoids faked shots but can drop correct dark or low-quality takes.
+  a strict threshold never fakes a shot, but a correct take can fall under it when the
+  search hints are off (the applause clip).
   The fix is calibration on a labelled set of 20-50 real projects, ideally per shot type.
 - **LLM-written hints are a risk.** Early versions failed because the LLM wrote negations
   ("street with no café"; CLIP cannot read "no"), listed another shot as a look-alike, or added
@@ -114,8 +118,8 @@ Python 3.11. Database and storage on Supabase (eu-west-2).
 |---|---|---|---|
 | Analysis of all 4 files (230.9 s of footage) | **326 s** (raw file 244 s, uploads 23-29 s each) | 488 s | 1.6 GB |
 | Search hints (gpt-4.1) | 2-13 s | ~0 | - |
-| Shot search, one list (hybrid) | 17 s with the model loaded (38 s on the first search after start, which includes loading CLIP; now pre-loaded at start-up) | 24 s | 1.3 GB |
-| Shot search (baseline) | 2.4 s | 4 s | - |
+| Shot search, one list (hybrid) | 23–49 s in the deliverable runs (49 s = first search after a restart: loading CLIP + writing search hints with gpt-4.1; CLIP is now pre-loaded at start-up). Search alone ≈ 7.5 s once loaded | 24 s | 1.3 GB |
+| Shot search (baseline) | 7.6–8.6 s per list | 4 s | - |
 | Render 25 s MP4 (FFmpeg) + upload to Supabase | 21-26 s render + 7-13 s upload | - | - |
 | Whole assignment, both lists × both approaches + 2 renders | ~10 min end to end | | |
 

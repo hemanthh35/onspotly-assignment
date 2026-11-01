@@ -12,9 +12,22 @@ hard-coded to the café assignment; it is the first project the platform was run
 | **Admin** (`/admin`) | KPIs, spend over time, per-video cost analysis (processing time, CPU, RAM, tokens, storage, egress), processing statistics, activity heatmap, finder-quality histograms, activity feed, system health |
 | **Outputs** | Edited MP4 (16:9 / 9:16 / 1:1 / 4:5, optional fades, end title, background music) · clip list JSON + CSV · CMX3600 EDL · FCPXML · shot-finder results JSON in OnSpotly's format |
 
+## Results (measured against my hand labels of the footage)
+
+| Shot list | Hybrid finder (mine) | Plain-CLIP baseline |
+|---|---|---|
+| OnSpotly reference list (8 shots) | **8 / 8 correct**, ribbon cutting reported missing (not in footage), 97 % timestamp purity | 5 / 8 (fakes the ribbon cutting, misses the spoken welcome) |
+| My AI shot list (7 shots) | **7 / 7 correct** | 4 / 7 |
+| Unseen practice clips (4 + 2 absent shots) | 5 / 6 (applause clip missed) | n/a |
+
+No blurry, dark or look-alike take was chosen; the spoken welcome line is found within 0.3 s.
+Thresholds were tuned on the café footage, so the practice-clip score is the honest number for new footage.
+Details: [docs/research_note.md](docs/research_note.md) · scored by `scripts/evaluate.py` against `docs/ground_truth.json`.
+
 ## Run it (2 commands)
 
-Requirements: **Python 3.11+**, **FFmpeg** on PATH, **Node.js 20+** (only to build the web apps once).
+Requirements: **Python 3.11+** and **FFmpeg** on PATH. The web apps are already built (`frontend/dist`,
+`admin/dist`), so Node.js is only needed if you change the frontend code.
 
 ```bash
 pip install -r requirements.txt

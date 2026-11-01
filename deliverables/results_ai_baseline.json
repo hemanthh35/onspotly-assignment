@@ -168,8 +168,10 @@
     }
   ],
   "processing": {
-    "seconds": 637.3,
-    "machine": "AMD Ryzen 5 5600H with Radeon Graphics, 6 cores / 12 threads, 15 GB RAM, no GPU (CPU only)",
+    "seconds": 334.5,
+    "analysis_seconds": 325.9,
+    "search_seconds": 8.6,
+    "machine": "AMD Ryzen 5 5600H with Radeon Graphics, 6 cores / 12 threads, 16 GB RAM, no GPU (CPU only)",
     "models": [
       "OpenCLIP ViT-B-16 (laion2b_s34b_b88k)",
       "faster-whisper small (int8, CPU)",

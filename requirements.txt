@@ -4,7 +4,6 @@ python-multipart
 python-dotenv
 openai
 sqlalchemy
-alembic
 psycopg[binary]
 supabase
 psutil
@@ -15,6 +14,5 @@ torchvision
 open_clip_torch
 faster-whisper
 numpy
-pandas
 pillow
 requests

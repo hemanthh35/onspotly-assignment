@@ -24,12 +24,12 @@ Don't look at this until you have run the test. Then compare.
 | Happy regulars smiling | raw **15–26 s** | visual match |
 | Owner says thank you | raw **~16.2 s onward**, marked *found by audio*, reason quotes "Thank you all for coming…" | finding a moment by sound (Whisper) |
 | Free cupcakes for kids | **MISSING**: not in the footage | honesty, never fakes a shot |
-| Crowd applauding | raw **0–8 s**, *or* reported missing with a low score | hard case: dark stage footage (see below) |
+| Crowd applauding | raw **0–8 s**, *or* reported missing | known weakness (see below) |
 
-Note on the applause shot: in my earlier test on this exact clip the finder was strict and
-reported it missing (score 0.19), because the dark lighting lowers the quality weighting. If it
-shows up as missing, the "closest candidates" in the editor should point to raw 0–8 s, and you can
-add it back with one click. That's an honest result, not a crash.
+Note on the applause shot: this is a known weakness. The visual match is strong (about 0.93 per
+frame), but the AI-written look-alikes for it (e.g. "performers acting on stage") are too close to
+applause itself and pull the score under the 0.25 threshold, so it is usually reported missing,
+sometimes with no candidates listed. That's an honest miss, not a crash.
 
 The "regulars" and "thank you" shots come from the same take (15–26 s). The finder never uses the
 same moment twice, so it gives them different, non-overlapping parts of that take, or uses the rest
