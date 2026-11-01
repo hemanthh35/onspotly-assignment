@@ -143,8 +143,13 @@ def render_mp4(clips: list[dict], sources: dict[str, Path], out: Path, *, aspect
     if music is not None:
         inputs += ["-stream_loop", "-1", "-i", str(music)]
         fade_at = max(0.0, total - 1.5)
-        af = (f"[1:a]volume={music_volume},atrim=0:{total:.3f},afade=t=out:st={fade_at:.2f}:d=1.5[m];"
-              f"[0:a][m]amix=inputs=2:duration=first:normalize=0[a]")
+        # Duck the music to 20 % while a shot that needs its own audio plays (e.g. a spoken line).
+        starts = [sum(durs[:k]) - k * xf for k in range(len(durs))]
+        spans = [(starts[k], starts[k] + durs[k]) for k, c in enumerate(clips) if c.get("needs_audio")]
+        duck = "+".join(f"between(t,{a:.2f},{b:.2f})" for a, b in spans)
+        vol = f"volume='{music_volume}*if({duck},0.2,1)':eval=frame" if duck else f"volume={music_volume}"
+        af = (f"[1:a]atrim=0:{total:.3f},asetpts=PTS-STARTPTS,{vol},afade=t=out:st={fade_at:.2f}:d=1.5[m];"
+              f"[0:a][m]amix=inputs=2:duration=first:normalize=0,alimiter=limit=0.95[a]")
     cmd = [FFMPEG, "-y", *inputs]
     if af or vf_final:
         fc = []
