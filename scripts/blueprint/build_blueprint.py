@@ -228,7 +228,7 @@ lanes = [
      ("python-multipart", "file uploads"), ("python-dotenv", ".env settings")]),
     ("TOOLS & SERVICES", [("FFmpeg 9", "cut · join · mix · title"), ("Supabase", "Postgres + Storage"),
      ("Google Colab T4", "optional free GPU"), ("cloudflared", "worker tunnel"), ("Conda", "Python env + FFmpeg"),
-     ("Node 22", "builds the web apps"), ("Git / GitHub", "repo · notebook source"), ("Claude Code", "AI pair-programmer")]),
+     ("Node 22", "builds the web apps"), ("Git / GitHub", "repo · notebook source"), ("Excalidraw", "this blueprint")]),
 ]
 y = 520
 for title, chips in lanes:

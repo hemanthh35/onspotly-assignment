@@ -59,3 +59,6 @@ desktop.ini
 .idea/
 *.log
 .claude/
+
+# Personal submission packet (email draft, Drive uploads) - local only, never in the repo
+submission/

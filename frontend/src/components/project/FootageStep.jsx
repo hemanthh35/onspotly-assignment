@@ -26,6 +26,42 @@ function SceneStrip({ asset }) {
   )
 }
 
+const QUALITY_LEVELS = [
+  { cls: 'bg-emerald-500/80', name: 'Good take', range: '75–100', text: 'sharp, bright and steady' },
+  { cls: 'bg-amber-400/90', name: 'Usable', range: '50–75', text: 'a bit soft, dim or shaky' },
+  { cls: 'bg-brand/80', name: 'Weak take', range: 'below 50', text: 'too dark, blurry or shaky' },
+]
+
+/** Legend for the scene bars: what the colours mean, how the score is made, why it matters. */
+function QualityLegend({ videos }) {
+  const scenes = videos.flatMap((a) => a.scenes || [])
+  const count = (lo, hi) => scenes.filter((s) => s.overall >= lo && s.overall < hi).length
+  const counts = [count(0.75, 2), count(0.5, 0.75), count(-1, 0.5)]
+  return (
+    <div className="card p-4 text-sm">
+      <p className="font-semibold">Reading the quality bars</p>
+      <p className="mt-1 text-xs leading-relaxed text-muted">Each block is one take (a scene between two camera cuts). Its width is how long it lasts.</p>
+      <ul className="mt-3 space-y-2">
+        {QUALITY_LEVELS.map((l, i) => (
+          <li key={l.name} className="flex items-start gap-2.5">
+            <span className={clsx('mt-0.5 h-4 w-6 shrink-0 rounded', l.cls)} />
+            <span className="min-w-0 flex-1 text-xs leading-relaxed">
+              <b className="text-ink">{l.name}</b> <span className="text-muted">· score {l.range}</span>
+              <span className="block text-muted">{l.text}</span>
+            </span>
+            {scenes.length > 0 && <span className="shrink-0 text-xs font-semibold tabular-nums text-ink">{counts[i]}</span>}
+          </li>
+        ))}
+      </ul>
+      <div className="mt-3 rounded-xl bg-stone-50 p-3 text-xs leading-relaxed text-muted">
+        <p><b className="text-ink">Score</b> = 45% sharpness + 35% brightness + 20% steadiness, measured on the real frames.</p>
+        <p className="mt-1.5"><b className="text-ink">Why it matters:</b> when two takes show the same thing, the shot finder picks the greener one. Weak takes lose points, so they're only used if nothing better matches.</p>
+      </div>
+      <p className="mt-2 text-[11px] text-muted">Hover a block to see its exact numbers.</p>
+    </div>
+  )
+}
+
 export default function FootageStep({ project, refresh, next }) {
   const [uploading, setUploading] = useState(null)
   const { data: compute } = useQuery({ queryKey: ['compute'], queryFn: api.compute, staleTime: 30000 })
@@ -106,6 +142,7 @@ export default function FootageStep({ project, refresh, next }) {
           <span className="flex-1">Analysis runs on <b>{compute?.mode === 'remote' ? 'Google Colab GPU' : 'this computer (CPU)'}</b></span>
           <span className="text-xs font-semibold text-brand">Change</span>
         </Link>
+        {videos.length > 0 && <QualityLegend videos={videos} />}
         <div className="card p-4 text-sm">
           <p className="font-semibold">What the analysis does</p>
           <ul className="mt-2 space-y-1.5 text-xs leading-relaxed text-muted">

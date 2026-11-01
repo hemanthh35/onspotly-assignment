@@ -48,9 +48,24 @@ def probe(path: Path) -> dict:
 
 
 def detect_scenes(path: Path, duration: float) -> list[list[float]]:
-    from scenedetect import AdaptiveDetector, detect
+    """Scene cuts via PySceneDetect, always on its OpenCV backend.
 
-    scenes = [[round(a.seconds, 3), round(b.seconds, 3)] for a, b in detect(str(path), AdaptiveDetector())]
+    Older PySceneDetect releases pick the PyAV backend and break with new PyAV versions
+    ("open() got an unexpected keyword argument 'metadata_errors'", seen on Colab), so the
+    backend is explicit. If detection still fails, the file is treated as one scene rather
+    than failing the whole analysis.
+    """
+    try:
+        from scenedetect import AdaptiveDetector, SceneManager, open_video
+
+        video = open_video(str(path), backend="opencv")
+        manager = SceneManager()
+        manager.add_detector(AdaptiveDetector())
+        manager.detect_scenes(video)
+        scenes = [[round(a.get_seconds(), 3), round(b.get_seconds(), 3)] for a, b in manager.get_scene_list()]
+    except Exception as exc:
+        print(f"[analyze] scene detection failed for {path.name} ({exc}); using one scene")
+        scenes = []
     return scenes or [[0.0, round(duration, 3)]]
 
 
