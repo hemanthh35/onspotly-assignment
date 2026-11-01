@@ -1,0 +1,35 @@
+{
+  "analysis_seconds": 325.926,
+  "analysis_cpu_seconds": 488.031,
+  "analysis_peak_ram_mb": 1622.0,
+  "analysis_steps": [
+    {
+      "name": "analyze:f54bb6",
+      "wall": 244.135,
+      "cpu": 423.844
+    },
+    {
+      "name": "analyze:dc134c",
+      "wall": 29.1,
+      "cpu": 33.109
+    },
+    {
+      "name": "analyze:0127b4",
+      "wall": 23.31,
+      "cpu": 18.656
+    },
+    {
+      "name": "analyze:e601ff",
+      "wall": 29.38,
+      "cpu": 12.422
+    }
+  ],
+  "end_to_end_seconds": 294.5,
+  "project_id": "30c08ddb6e6c4cf3b42ecc183b9029ec",
+  "runs": {
+    "reference_hybrid": "c30c52abb6194301a945fbfe716616c3",
+    "reference_baseline": "9773625da7954f6d9ca7b988ab276ab0",
+    "ai_hybrid": "d4ae9b5b4f594227a26c418b35debf42",
+    "ai_baseline": "2fd5231d3d6b4b26a47141f619f6775b"
+  }
+}

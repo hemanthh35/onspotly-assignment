@@ -1,0 +1,64 @@
+{
+  "_note": "Reference shot list produced by OnSpotly's planning step for brief.md. Use it to test your shot finder and to compare with the shot list your own AI makes from the brief.",
+  "project": "Bean & Bloom grand opening reel",
+  "target_length_seconds": 30,
+  "aspect": "16:9 (vertical crop optional)",
+  "shots": [
+    {
+      "order": 1,
+      "shot_id": "S1",
+      "name": "Café exterior",
+      "description": "Wide shot of the café from outside: the street and the outdoor seating.",
+      "target_seconds": 3
+    },
+    {
+      "order": 2,
+      "shot_id": "S2",
+      "name": "Barista making coffee",
+      "description": "Espresso being made at the coffee machine.",
+      "target_seconds": 3
+    },
+    {
+      "order": 3,
+      "shot_id": "S3",
+      "name": "Latte art close-up",
+      "description": "Close-up of milk being poured into a coffee to create latte art.",
+      "target_seconds": 4
+    },
+    {
+      "order": 4,
+      "shot_id": "S4",
+      "name": "Happy customers",
+      "description": "Customers chatting and smiling at a table inside the café.",
+      "target_seconds": 4
+    },
+    {
+      "order": 5,
+      "shot_id": "S5",
+      "name": "Pastry display",
+      "description": "A look across the pastries in the display case.",
+      "target_seconds": 3
+    },
+    {
+      "order": 6,
+      "shot_id": "S6",
+      "name": "Owner welcomes guests",
+      "description": "The owner welcomes everyone to the grand opening. We need the moment they say the welcome line.",
+      "target_seconds": 5
+    },
+    {
+      "order": 7,
+      "shot_id": "S7",
+      "name": "Ribbon cutting",
+      "description": "The ribbon being cut at the café entrance to open the café.",
+      "target_seconds": 3
+    },
+    {
+      "order": 8,
+      "shot_id": "S8",
+      "name": "Celebration toast",
+      "description": "Guests raise their glasses together for a toast — this is the ending shot.",
+      "target_seconds": 3
+    }
+  ]
+}

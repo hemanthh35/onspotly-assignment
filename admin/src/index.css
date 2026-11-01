@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sora Variable", "Inter Variable", ui-sans-serif, sans-serif;
+  --color-bg: #0b0b0c;
+  --color-panel: #141416;
+  --color-panel-2: #1c1c1f;
+  --color-edge: #2a2a2e;
+  --color-fg: #f4f4f5;
+  --color-dim: #a1a1aa;
+  --color-faint: #71717a;
+  --color-brand: #e11d2e;
+  --color-brand-soft: #e11d2e26;
+  /* Validated categorical slots (dark surface): compute, llm, storage, egress */
+  --color-s1: #3987e5;
+  --color-s2: #d95926;
+  --color-s3: #199e70;
+  --color-s4: #c98500;
+}
+
+html, body { color-scheme: dark; }
+body { @apply bg-bg text-fg font-sans antialiased; }
+h1, h2, h3, .font-display { font-family: var(--font-display); letter-spacing: -0.02em; }
+
+@utility panel { @apply rounded-2xl border border-edge bg-panel; }
+@utility kicker { @apply text-[11px] font-semibold uppercase tracking-wider text-faint; }
+@utility chip { @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold; }
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition
+         active:scale-[.98] disabled:opacity-50;
+}
+@utility input {
+  @apply w-full rounded-xl border border-edge bg-panel-2 px-3.5 py-2.5 text-sm text-fg outline-none
+         focus:border-brand focus:ring-4 focus:ring-brand/15;
+}
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}

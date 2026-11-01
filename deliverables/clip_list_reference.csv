@@ -1,0 +1,8 @@
+order,shot_id,name,file,start,end,duration,timeline_in,timeline_out,needs_audio
+1,S1,Café exterior,raw_footage.mp4,117.1,120.1,3.0,0.0,3.0,False
+2,S2,Barista making coffee,raw_footage.mp4,23.6,26.6,3.0,3.0,6.0,False
+3,S3,Latte art close-up,raw_footage.mp4,181.97,185.97,4.0,6.0,10.0,False
+4,S4,Happy customers,raw_footage.mp4,145.4,149.4,4.0,10.0,14.0,False
+5,S5,Pastry display,raw_footage.mp4,166.47,169.47,3.0,14.0,17.0,False
+6,S6,Owner welcomes guests,raw_footage.mp4,58.15,63.15,5.0,17.0,22.0,True
+7,S8,Celebration toast,raw_footage.mp4,188.47,191.47,3.0,22.0,25.0,False

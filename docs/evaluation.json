@@ -1,0 +1,530 @@
+{
+  "results_ai_baseline": {
+    "summary": {
+      "file": "results_ai_baseline.json",
+      "shots": 7,
+      "correct": 4,
+      "accuracy": 0.571,
+      "missing_correct": 0,
+      "missing_total": 1,
+      "false_missing": 1,
+      "false_positive": 1,
+      "best_take": 4,
+      "bad_takes": 0,
+      "distractors": 0,
+      "mean_purity": 0.897,
+      "audio_start_error_s": null
+    },
+    "rows": [
+      {
+        "shot_id": "A1",
+        "name": "Caf\u00e9 Exterior",
+        "concepts": [
+          "S1"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "A2",
+        "name": "Coffee Making & Latte Art",
+        "concepts": [
+          "S3",
+          "S2"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 0.973,
+        "start_error": null
+      },
+      {
+        "shot_id": "A3",
+        "name": "Happy Customers",
+        "concepts": [
+          "S4"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 0.807,
+        "start_error": null
+      },
+      {
+        "shot_id": "A4",
+        "name": "Pastries Close-Up",
+        "concepts": [
+          "S5"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 0.915,
+        "start_error": null
+      },
+      {
+        "shot_id": "A5",
+        "name": "Owner Welcoming",
+        "concepts": [
+          "S6"
+        ],
+        "present": true,
+        "status": "missing",
+        "correct": false,
+        "best_take": null,
+        "bad_take": false,
+        "distractor": false,
+        "purity": null,
+        "start_error": null
+      },
+      {
+        "shot_id": "A6",
+        "name": "Ribbon Cutting",
+        "concepts": [
+          "S7"
+        ],
+        "present": false,
+        "status": "found",
+        "correct": false,
+        "best_take": null,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 0.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "A7",
+        "name": "Group Toast",
+        "concepts": [
+          "S8"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": false,
+        "best_take": null,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 0.79,
+        "start_error": null
+      }
+    ]
+  },
+  "results_ai_hybrid": {
+    "summary": {
+      "file": "results_ai_hybrid.json",
+      "shots": 7,
+      "correct": 7,
+      "accuracy": 1.0,
+      "missing_correct": 1,
+      "missing_total": 1,
+      "false_missing": 0,
+      "false_positive": 0,
+      "best_take": 6,
+      "bad_takes": 0,
+      "distractors": 0,
+      "mean_purity": 0.978,
+      "audio_start_error_s": 0.3
+    },
+    "rows": [
+      {
+        "shot_id": "A1",
+        "name": "Caf\u00e9 Exterior",
+        "concepts": [
+          "S1"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "A2",
+        "name": "Coffee Making & Latte Art",
+        "concepts": [
+          "S3",
+          "S2"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "A3",
+        "name": "Happy Customers",
+        "concepts": [
+          "S4"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "A4",
+        "name": "Pastries Close-Up",
+        "concepts": [
+          "S5"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "A5",
+        "name": "Owner Welcoming",
+        "concepts": [
+          "S6"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 0.868,
+        "start_error": 0.3
+      },
+      {
+        "shot_id": "A6",
+        "name": "Ribbon Cutting",
+        "concepts": [
+          "S7"
+        ],
+        "present": false,
+        "status": "missing",
+        "correct": true,
+        "best_take": null,
+        "bad_take": false,
+        "distractor": false,
+        "purity": null,
+        "start_error": null
+      },
+      {
+        "shot_id": "A7",
+        "name": "Group Toast",
+        "concepts": [
+          "S8"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      }
+    ]
+  },
+  "results_reference_baseline": {
+    "summary": {
+      "file": "results_reference_baseline.json",
+      "shots": 8,
+      "correct": 5,
+      "accuracy": 0.625,
+      "missing_correct": 0,
+      "missing_total": 1,
+      "false_missing": 0,
+      "false_positive": 1,
+      "best_take": 5,
+      "bad_takes": 0,
+      "distractors": 0,
+      "mean_purity": 0.801,
+      "audio_start_error_s": 111.58
+    },
+    "rows": [
+      {
+        "shot_id": "S1",
+        "name": "S1",
+        "concepts": [
+          "S1"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "S2",
+        "name": "S2",
+        "concepts": [
+          "S2"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "S3",
+        "name": "S3",
+        "concepts": [
+          "S3"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "S4",
+        "name": "S4",
+        "concepts": [
+          "S4"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": false,
+        "best_take": null,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 0.61,
+        "start_error": null
+      },
+      {
+        "shot_id": "S5",
+        "name": "S5",
+        "concepts": [
+          "S5"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "S6",
+        "name": "S6",
+        "concepts": [
+          "S6"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": false,
+        "best_take": null,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 0.0,
+        "start_error": 111.58
+      },
+      {
+        "shot_id": "S7",
+        "name": "S7",
+        "concepts": [
+          "S7"
+        ],
+        "present": false,
+        "status": "found",
+        "correct": false,
+        "best_take": null,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 0.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "S8",
+        "name": "S8",
+        "concepts": [
+          "S8"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      }
+    ]
+  },
+  "results_reference_hybrid": {
+    "summary": {
+      "file": "results_reference_hybrid.json",
+      "shots": 8,
+      "correct": 8,
+      "accuracy": 1.0,
+      "missing_correct": 1,
+      "missing_total": 1,
+      "false_missing": 0,
+      "false_positive": 0,
+      "best_take": 6,
+      "bad_takes": 0,
+      "distractors": 0,
+      "mean_purity": 0.97,
+      "audio_start_error_s": 0.3
+    },
+    "rows": [
+      {
+        "shot_id": "S1",
+        "name": "S1",
+        "concepts": [
+          "S1"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "S2",
+        "name": "S2",
+        "concepts": [
+          "S2"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "S3",
+        "name": "S3",
+        "concepts": [
+          "S3"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "S4",
+        "name": "S4",
+        "concepts": [
+          "S4"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "S5",
+        "name": "S5",
+        "concepts": [
+          "S5"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      },
+      {
+        "shot_id": "S6",
+        "name": "S6",
+        "concepts": [
+          "S6"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": false,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 0.792,
+        "start_error": 0.3
+      },
+      {
+        "shot_id": "S7",
+        "name": "S7",
+        "concepts": [
+          "S7"
+        ],
+        "present": false,
+        "status": "missing",
+        "correct": true,
+        "best_take": null,
+        "bad_take": false,
+        "distractor": false,
+        "purity": null,
+        "start_error": null
+      },
+      {
+        "shot_id": "S8",
+        "name": "S8",
+        "concepts": [
+          "S8"
+        ],
+        "present": true,
+        "status": "found",
+        "correct": true,
+        "best_take": true,
+        "bad_take": false,
+        "distractor": false,
+        "purity": 1.0,
+        "start_error": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,288 @@
+{
+  "project": "Bean & Bloom grand opening",
+  "source_files": [
+    "raw_footage.mp4",
+    "upload_01.mp4",
+    "upload_02.mp4",
+    "upload_03.mp4"
+  ],
+  "shots": [
+    {
+      "shot_id": "S1",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 117.1,
+        "end": 120.1,
+        "confidence": 0.975,
+        "quality": {
+          "sharpness": 1.0,
+          "brightness": 1.0,
+          "stability": 0.963,
+          "overall": 0.993
+        },
+        "reason": "Looks like “wide shot showing tables and chairs outside a café”; sharp, well lit, steady"
+      },
+      "alternatives": []
+    },
+    {
+      "shot_id": "S2",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 23.6,
+        "end": 26.6,
+        "confidence": 0.951,
+        "quality": {
+          "sharpness": 1.0,
+          "brightness": 0.968,
+          "stability": 0.984,
+          "overall": 0.985
+        },
+        "reason": "Looks like “espresso pouring from a coffee machine spout”; sharp, well lit, steady"
+      },
+      "alternatives": [
+        {
+          "file": "upload_02.mp4",
+          "start": 0.1,
+          "end": 3.1,
+          "confidence": 0.893,
+          "quality": {
+            "sharpness": 1.0,
+            "brightness": 0.631,
+            "stability": 0.799,
+            "overall": 0.831
+          },
+          "reason": "Looks like “barista operating espresso machine with portafilter”; sharp, dim, steady"
+        },
+        {
+          "file": "raw_footage.mp4",
+          "start": 196.24,
+          "end": 199.24,
+          "confidence": 0.142,
+          "quality": {
+            "sharpness": 1.0,
+            "brightness": 1.0,
+            "stability": 0.962,
+            "overall": 0.992
+          },
+          "reason": "Looks like “close-up of dark coffee filling a small cup”; sharp, well lit, steady"
+        }
+      ]
+    },
+    {
+      "shot_id": "S3",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 181.97,
+        "end": 185.97,
+        "confidence": 0.951,
+        "quality": {
+          "sharpness": 0.865,
+          "brightness": 1.0,
+          "stability": 0.955,
+          "overall": 0.93
+        },
+        "reason": "Looks like “Close-up of milk being poured into a coffee to create latte art.”; sharp, well lit, steady"
+      },
+      "alternatives": [
+        {
+          "file": "raw_footage.mp4",
+          "start": 96.1,
+          "end": 100.1,
+          "confidence": 0.84,
+          "quality": {
+            "sharpness": 0.984,
+            "brightness": 1.0,
+            "stability": 0.023,
+            "overall": 0.797
+          },
+          "reason": "Looks like “Close-up of milk being poured into a coffee to create latte art.”; sharp, well lit, shaky"
+        },
+        {
+          "file": "upload_01.mp4",
+          "start": 5.1,
+          "end": 9.1,
+          "confidence": 0.715,
+          "quality": {
+            "sharpness": 1.0,
+            "brightness": 0.737,
+            "stability": 0.912,
+            "overall": 0.89
+          },
+          "reason": "Looks like “Close-up of milk being poured into a coffee to create latte art.”; sharp, dim, steady"
+        }
+      ]
+    },
+    {
+      "shot_id": "S4",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 145.4,
+        "end": 149.4,
+        "confidence": 0.829,
+        "quality": {
+          "sharpness": 1.0,
+          "brightness": 1.0,
+          "stability": 0.899,
+          "overall": 0.98
+        },
+        "reason": "Looks like “happy faces in a cozy café interior”; sharp, well lit, steady"
+      },
+      "alternatives": [
+        {
+          "file": "raw_footage.mp4",
+          "start": 69.1,
+          "end": 73.1,
+          "confidence": 0.363,
+          "quality": {
+            "sharpness": 0.3,
+            "brightness": 0.0,
+            "stability": 0.879,
+            "overall": 0.311
+          },
+          "reason": "Looks like “happy faces in a cozy café interior”; blurry, too dark, steady; weak take (quality)"
+        }
+      ]
+    },
+    {
+      "shot_id": "S5",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 166.47,
+        "end": 169.47,
+        "confidence": 0.978,
+        "quality": {
+          "sharpness": 1.0,
+          "brightness": 0.992,
+          "stability": 0.98,
+          "overall": 0.993
+        },
+        "reason": "Looks like “A look across the pastries in the display case.”; sharp, well lit, steady"
+      },
+      "alternatives": []
+    },
+    {
+      "shot_id": "S6",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 58.15,
+        "end": 63.15,
+        "confidence": 0.9,
+        "quality": {
+          "sharpness": 1.0,
+          "brightness": 0.963,
+          "stability": 0.95,
+          "overall": 0.977
+        },
+        "reason": "Heard: “Welcome to Bean and Bloom. Thank you so much for coming to our grand opening today.”; sharp, well lit, steady; speaker not clearly visible on screen (found by audio)"
+      },
+      "alternatives": []
+    },
+    {
+      "shot_id": "S7",
+      "status": "missing",
+      "best": null,
+      "alternatives": [],
+      "reason": "No moment above the confidence threshold (0.25); closest candidate scored 0.00",
+      "suggestions": []
+    },
+    {
+      "shot_id": "S8",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 188.47,
+        "end": 191.47,
+        "confidence": 0.962,
+        "quality": {
+          "sharpness": 1.0,
+          "brightness": 1.0,
+          "stability": 0.796,
+          "overall": 0.959
+        },
+        "reason": "Looks like “group of people clinking glasses in celebration”; sharp, well lit, steady"
+      },
+      "alternatives": [
+        {
+          "file": "upload_03.mp4",
+          "start": 0.1,
+          "end": 2.87,
+          "confidence": 0.332,
+          "quality": {
+            "sharpness": 0.519,
+            "brightness": 0.676,
+            "stability": 0.521,
+            "overall": 0.574
+          },
+          "reason": "Looks like “Guests raise their glasses together for a toast — this is the ending shot.”; soft focus, dim, a little shaky"
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "order": 1,
+      "shot_id": "S1",
+      "file": "raw_footage.mp4",
+      "start": 117.1,
+      "end": 120.1
+    },
+    {
+      "order": 2,
+      "shot_id": "S2",
+      "file": "raw_footage.mp4",
+      "start": 23.6,
+      "end": 26.6
+    },
+    {
+      "order": 3,
+      "shot_id": "S3",
+      "file": "raw_footage.mp4",
+      "start": 181.97,
+      "end": 185.97
+    },
+    {
+      "order": 4,
+      "shot_id": "S4",
+      "file": "raw_footage.mp4",
+      "start": 145.4,
+      "end": 149.4
+    },
+    {
+      "order": 5,
+      "shot_id": "S5",
+      "file": "raw_footage.mp4",
+      "start": 166.47,
+      "end": 169.47
+    },
+    {
+      "order": 6,
+      "shot_id": "S6",
+      "file": "raw_footage.mp4",
+      "start": 58.15,
+      "end": 63.15
+    },
+    {
+      "order": 7,
+      "shot_id": "S8",
+      "file": "raw_footage.mp4",
+      "start": 188.47,
+      "end": 191.47
+    }
+  ],
+  "processing": {
+    "seconds": 637.3,
+    "machine": "AMD Ryzen 5 5600H with Radeon Graphics, 6 cores / 12 threads, 15 GB RAM, no GPU (CPU only)",
+    "models": [
+      "OpenCLIP ViT-B-16 (laion2b_s34b_b88k)",
+      "faster-whisper small (int8, CPU)"
+    ],
+    "approach": "hybrid",
+    "shot_list": "OnSpotly reference shot list"
+  }
+}

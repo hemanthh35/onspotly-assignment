@@ -1,0 +1,61 @@
+# --- Large files: assignment zip and footage (provided by OnSpotly, not ours to publish) ---
+*.zip
+OnSpotly_Intern_Assignment-*.zip
+OnSpotly_Intern_Assignment/02_Resources/footage/
+OnSpotly_Intern_Assignment/02_Resources/practice/*.mp4
+
+# Any video / audio files anywhere (uploads, rendered reels, music)
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.webm
+*.mp3
+*.wav
+*.m4a
+*.aac
+
+# --- App runtime data ---
+# uploaded projects, extracted frames, caches, rendered reels
+data/
+outputs/
+cache/
+*.npy
+*.npz
+*.db
+*.sqlite
+*.sqlite3
+
+# Downloaded model weights (CLIP / Whisper)
+models/
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+*.egg-info/
+
+# --- Node (if used) ---
+node_modules/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.log
+.claude/

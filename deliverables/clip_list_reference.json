@@ -1,0 +1,92 @@
+{
+  "project": "Bean & Bloom grand opening",
+  "fps": 30,
+  "aspect_ratio": "16:9",
+  "total_seconds": 25.0,
+  "clips": [
+    {
+      "order": 1,
+      "shot_id": "S1",
+      "name": "Caf\u00e9 exterior",
+      "file": "raw_footage.mp4",
+      "start": 117.1,
+      "end": 120.1,
+      "duration": 3.0,
+      "timeline_in": 0.0,
+      "timeline_out": 3.0,
+      "needs_audio": false
+    },
+    {
+      "order": 2,
+      "shot_id": "S2",
+      "name": "Barista making coffee",
+      "file": "raw_footage.mp4",
+      "start": 23.6,
+      "end": 26.6,
+      "duration": 3.0,
+      "timeline_in": 3.0,
+      "timeline_out": 6.0,
+      "needs_audio": false
+    },
+    {
+      "order": 3,
+      "shot_id": "S3",
+      "name": "Latte art close-up",
+      "file": "raw_footage.mp4",
+      "start": 181.97,
+      "end": 185.97,
+      "duration": 4.0,
+      "timeline_in": 6.0,
+      "timeline_out": 10.0,
+      "needs_audio": false
+    },
+    {
+      "order": 4,
+      "shot_id": "S4",
+      "name": "Happy customers",
+      "file": "raw_footage.mp4",
+      "start": 145.4,
+      "end": 149.4,
+      "duration": 4.0,
+      "timeline_in": 10.0,
+      "timeline_out": 14.0,
+      "needs_audio": false
+    },
+    {
+      "order": 5,
+      "shot_id": "S5",
+      "name": "Pastry display",
+      "file": "raw_footage.mp4",
+      "start": 166.47,
+      "end": 169.47,
+      "duration": 3.0,
+      "timeline_in": 14.0,
+      "timeline_out": 17.0,
+      "needs_audio": false
+    },
+    {
+      "order": 6,
+      "shot_id": "S6",
+      "name": "Owner welcomes guests",
+      "file": "raw_footage.mp4",
+      "start": 58.15,
+      "end": 63.15,
+      "duration": 5.0,
+      "timeline_in": 17.0,
+      "timeline_out": 22.0,
+      "needs_audio": true
+    },
+    {
+      "order": 7,
+      "shot_id": "S8",
+      "name": "Celebration toast",
+      "file": "raw_footage.mp4",
+      "start": 188.47,
+      "end": 191.47,
+      "duration": 3.0,
+      "timeline_in": 22.0,
+      "timeline_out": 25.0,
+      "needs_audio": false
+    }
+  ]
+}

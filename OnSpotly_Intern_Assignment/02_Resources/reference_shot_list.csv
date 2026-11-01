@@ -1,0 +1,9 @@
+order,shot_id,name,description,target_seconds
+1,S1,Café exterior,Wide shot of the café from outside: the street and the outdoor seating.,3
+2,S2,Barista making coffee,Espresso being made at the coffee machine.,3
+3,S3,Latte art close-up,Close-up of milk being poured into a coffee to create latte art.,4
+4,S4,Happy customers,Customers chatting and smiling at a table inside the café.,4
+5,S5,Pastry display,A look across the pastries in the display case.,3
+6,S6,Owner welcomes guests,The owner welcomes everyone to the grand opening. We need the moment they say the welcome line.,5
+7,S7,Ribbon cutting,The ribbon being cut at the café entrance to open the café.,3
+8,S8,Celebration toast,Guests raise their glasses together for a toast — this is the ending shot.,3

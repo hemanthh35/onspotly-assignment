@@ -1,0 +1,158 @@
+{
+  "source": "ai",
+  "model": "gpt-4.1",
+  "brief": "Hi! We just opened our little café, Bean & Bloom, and want a 30-second Instagram reel from today's grand opening.\nIt should feel warm, cosy and energetic. Start outside so people see where we are, then show our coffee being made —\nespecially the latte art, our barista is amazing at it. Show happy customers, a slow look at our pastries,\nand me welcoming everyone (please use the bit where I actually say welcome!). We also did a ribbon cutting at the door.\nEnd with everyone raising a toast. Nothing blurry or too dark, please — we want it to look professional.",
+  "shots": [
+    {
+      "shot_id": "A1",
+      "name": "Café Exterior",
+      "description": "A warm, inviting shot of the outside of Bean & Bloom café, showing its location and entrance.",
+      "target_seconds": 4.0,
+      "order": 1,
+      "needs_audio": false,
+      "visual_queries": [
+        "the exterior of a café with a visible entrance",
+        "people gathered outside a small café",
+        "the front of a café with windows and door"
+      ],
+      "negative_queries": [
+        "interior shots of the café",
+        "close-ups of coffee or pastries",
+        "people inside the café"
+      ],
+      "audio_keywords": [],
+      "brief_quote": "Start outside so people see where we are",
+      "grounded": true
+    },
+    {
+      "shot_id": "A2",
+      "name": "Coffee Making & Latte Art",
+      "description": "Barista making coffee, focusing on the creation of latte art in a cup.",
+      "target_seconds": 6.0,
+      "order": 2,
+      "needs_audio": false,
+      "visual_queries": [
+        "a barista pouring milk to create latte art",
+        "close-up of a hand making a pattern in coffee foam",
+        "latte art forming in a cup"
+      ],
+      "negative_queries": [
+        "plain coffee being poured without art",
+        "coffee beans or grounds",
+        "barista preparing espresso shots"
+      ],
+      "audio_keywords": [],
+      "brief_quote": "show our coffee being made — especially the latte art, our barista is amazing at it.",
+      "grounded": true
+    },
+    {
+      "shot_id": "A3",
+      "name": "Happy Customers",
+      "description": "Customers inside the café, smiling and enjoying their drinks in a cosy atmosphere.",
+      "target_seconds": 4.0,
+      "order": 3,
+      "needs_audio": false,
+      "visual_queries": [
+        "people smiling and holding drinks inside a café",
+        "customers chatting at tables in a cosy setting",
+        "groups of friends enjoying drinks"
+      ],
+      "negative_queries": [
+        "empty café tables",
+        "customers looking unhappy or neutral",
+        "staff behind the counter"
+      ],
+      "audio_keywords": [],
+      "brief_quote": "Show happy customers",
+      "grounded": true
+    },
+    {
+      "shot_id": "A4",
+      "name": "Pastries Close-Up",
+      "description": "A slow, detailed look at the café's pastries on display.",
+      "target_seconds": 4.0,
+      "order": 4,
+      "needs_audio": false,
+      "visual_queries": [
+        "close-up of assorted pastries on a display tray",
+        "pastries arranged in a glass case",
+        "detailed view of baked goods"
+      ],
+      "negative_queries": [
+        "pastries being eaten",
+        "empty pastry trays",
+        "cakes being sliced"
+      ],
+      "audio_keywords": [],
+      "brief_quote": "a slow look at our pastries",
+      "grounded": true
+    },
+    {
+      "shot_id": "A5",
+      "name": "Owner Welcoming",
+      "description": "The owner standing and saying 'welcome' to everyone, addressing the camera or guests.",
+      "target_seconds": 4.0,
+      "order": 5,
+      "needs_audio": true,
+      "visual_queries": [
+        "a person standing and speaking to guests in a café",
+        "the owner smiling and addressing the camera",
+        "someone greeting people inside a café"
+      ],
+      "negative_queries": [
+        "owner not speaking",
+        "owner serving drinks",
+        "owner in the background"
+      ],
+      "audio_keywords": [
+        "welcome",
+        "thank you for coming",
+        "greeting"
+      ],
+      "brief_quote": "me welcoming everyone (please use the bit where I actually say welcome!)",
+      "grounded": true
+    },
+    {
+      "shot_id": "A6",
+      "name": "Ribbon Cutting",
+      "description": "The ribbon cutting ceremony at the café door, capturing the celebratory moment.",
+      "target_seconds": 4.0,
+      "order": 6,
+      "needs_audio": false,
+      "visual_queries": [
+        "a ribbon being cut at a café entrance",
+        "scissors cutting a ribbon in front of a door",
+        "people gathered for a ribbon cutting ceremony"
+      ],
+      "negative_queries": [
+        "people entering the café without a ribbon",
+        "ribbon uncut at the door",
+        "interior celebrations"
+      ],
+      "audio_keywords": [],
+      "brief_quote": "We also did a ribbon cutting at the door.",
+      "grounded": true
+    },
+    {
+      "shot_id": "A7",
+      "name": "Group Toast",
+      "description": "Everyone inside the café raising their glasses together in a celebratory toast.",
+      "target_seconds": 4.0,
+      "order": 7,
+      "needs_audio": false,
+      "visual_queries": [
+        "a group of people raising glasses together",
+        "hands holding drinks up in a toast",
+        "customers and staff toasting inside a café"
+      ],
+      "negative_queries": [
+        "people drinking individually",
+        "glasses on tables",
+        "people clapping or waving"
+      ],
+      "audio_keywords": [],
+      "brief_quote": "End with everyone raising a toast.",
+      "grounded": true
+    }
+  ]
+}

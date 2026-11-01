@@ -1,0 +1,181 @@
+{
+  "project": "Bean & Bloom grand opening",
+  "source_files": [
+    "raw_footage.mp4",
+    "upload_01.mp4",
+    "upload_02.mp4",
+    "upload_03.mp4"
+  ],
+  "shots": [
+    {
+      "shot_id": "A1",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 111.02,
+        "end": 115.02,
+        "confidence": 0.236,
+        "quality": {
+          "sharpness": 1.0,
+          "brightness": 1.0,
+          "stability": 0.962,
+          "overall": 0.992
+        },
+        "reason": "Looks like “A warm, inviting shot of the outside of Bean & Bloom café, showing its location and entrance.”; sharp, well lit, steady"
+      },
+      "alternatives": []
+    },
+    {
+      "shot_id": "A2",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 182.03,
+        "end": 188.03,
+        "confidence": 0.366,
+        "quality": {
+          "sharpness": 0.846,
+          "brightness": 1.0,
+          "stability": 0.892,
+          "overall": 0.909
+        },
+        "reason": "Looks like “Barista making coffee, focusing on the creation of latte art in a cup.”; sharp, well lit, steady"
+      },
+      "alternatives": []
+    },
+    {
+      "shot_id": "A3",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 144.03,
+        "end": 148.03,
+        "confidence": 0.326,
+        "quality": {
+          "sharpness": 1.0,
+          "brightness": 1.0,
+          "stability": 0.764,
+          "overall": 0.953
+        },
+        "reason": "Looks like “Customers inside the café, smiling and enjoying their drinks in a cosy atmosphere.”; sharp, well lit, steady"
+      },
+      "alternatives": []
+    },
+    {
+      "shot_id": "A4",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 165.53,
+        "end": 169.53,
+        "confidence": 0.359,
+        "quality": {
+          "sharpness": 0.983,
+          "brightness": 0.984,
+          "stability": 0.814,
+          "overall": 0.95
+        },
+        "reason": "Looks like “A slow, detailed look at the café's pastries on display.”; sharp, well lit, steady"
+      },
+      "alternatives": []
+    },
+    {
+      "shot_id": "A5",
+      "status": "missing",
+      "best": null,
+      "alternatives": [],
+      "reason": "Best cosine 0.21 below 0.22"
+    },
+    {
+      "shot_id": "A6",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 165.53,
+        "end": 169.53,
+        "confidence": 0.239,
+        "quality": {
+          "sharpness": 0.983,
+          "brightness": 0.984,
+          "stability": 0.814,
+          "overall": 0.95
+        },
+        "reason": "Looks like “The ribbon cutting ceremony at the café door, capturing the celebratory moment.”; sharp, well lit, steady"
+      },
+      "alternatives": []
+    },
+    {
+      "shot_id": "A7",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 187.03,
+        "end": 191.03,
+        "confidence": 0.307,
+        "quality": {
+          "sharpness": 0.964,
+          "brightness": 1.0,
+          "stability": 0.654,
+          "overall": 0.915
+        },
+        "reason": "Looks like “Everyone inside the café raising their glasses together in a celebratory toast.”; sharp, well lit, a little shaky"
+      },
+      "alternatives": []
+    }
+  ],
+  "timeline": [
+    {
+      "order": 1,
+      "shot_id": "A1",
+      "file": "raw_footage.mp4",
+      "start": 111.02,
+      "end": 115.02
+    },
+    {
+      "order": 2,
+      "shot_id": "A2",
+      "file": "raw_footage.mp4",
+      "start": 182.03,
+      "end": 188.03
+    },
+    {
+      "order": 3,
+      "shot_id": "A3",
+      "file": "raw_footage.mp4",
+      "start": 144.03,
+      "end": 148.03
+    },
+    {
+      "order": 4,
+      "shot_id": "A4",
+      "file": "raw_footage.mp4",
+      "start": 165.53,
+      "end": 169.53
+    },
+    {
+      "order": 5,
+      "shot_id": "A6",
+      "file": "raw_footage.mp4",
+      "start": 165.53,
+      "end": 169.53
+    },
+    {
+      "order": 6,
+      "shot_id": "A7",
+      "file": "raw_footage.mp4",
+      "start": 187.03,
+      "end": 191.03
+    }
+  ],
+  "processing": {
+    "seconds": 637.3,
+    "machine": "AMD Ryzen 5 5600H with Radeon Graphics, 6 cores / 12 threads, 15 GB RAM, no GPU (CPU only)",
+    "models": [
+      "OpenCLIP ViT-B-16 (laion2b_s34b_b88k)",
+      "faster-whisper small (int8, CPU)",
+      "gpt-4.1 (shot planning / search hints)"
+    ],
+    "approach": "baseline",
+    "shot_list": "AI shot list"
+  }
+}

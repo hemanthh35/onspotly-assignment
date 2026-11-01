@@ -1,0 +1,80 @@
+{
+  "project": "Bean & Bloom grand opening",
+  "fps": 30,
+  "aspect_ratio": "16:9",
+  "total_seconds": 26.56,
+  "clips": [
+    {
+      "order": 1,
+      "shot_id": "A1",
+      "name": "Caf\u00e9 Exterior",
+      "file": "raw_footage.mp4",
+      "start": 112.1,
+      "end": 116.1,
+      "duration": 4.0,
+      "timeline_in": 0.0,
+      "timeline_out": 4.0,
+      "needs_audio": false
+    },
+    {
+      "order": 2,
+      "shot_id": "A2",
+      "name": "Coffee Making & Latte Art",
+      "file": "raw_footage.mp4",
+      "start": 179.97,
+      "end": 185.97,
+      "duration": 6.0,
+      "timeline_in": 4.0,
+      "timeline_out": 10.0,
+      "needs_audio": false
+    },
+    {
+      "order": 3,
+      "shot_id": "A3",
+      "name": "Happy Customers",
+      "file": "raw_footage.mp4",
+      "start": 145.4,
+      "end": 149.4,
+      "duration": 4.0,
+      "timeline_in": 10.0,
+      "timeline_out": 14.0,
+      "needs_audio": false
+    },
+    {
+      "order": 4,
+      "shot_id": "A4",
+      "name": "Pastries Close-Up",
+      "file": "raw_footage.mp4",
+      "start": 165.97,
+      "end": 169.97,
+      "duration": 4.0,
+      "timeline_in": 14.0,
+      "timeline_out": 18.0,
+      "needs_audio": false
+    },
+    {
+      "order": 5,
+      "shot_id": "A5",
+      "name": "Owner Welcoming",
+      "file": "raw_footage.mp4",
+      "start": 58.15,
+      "end": 62.71,
+      "duration": 4.56,
+      "timeline_in": 18.0,
+      "timeline_out": 22.56,
+      "needs_audio": true
+    },
+    {
+      "order": 6,
+      "shot_id": "A7",
+      "name": "Group Toast",
+      "file": "raw_footage.mp4",
+      "start": 188.97,
+      "end": 192.97,
+      "duration": 4.0,
+      "timeline_in": 22.56,
+      "timeline_out": 26.56,
+      "needs_audio": false
+    }
+  ]
+}

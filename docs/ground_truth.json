@@ -1,0 +1,52 @@
+{
+  "_note": "Hand-labelled by watching every file (contact sheets every 2 s + Whisper transcript). Times in seconds. 'good' = a correct, usable take; 'ok' = correct content but weaker take; 'bad' = correct content but unusable (blurry/dark); 'distractor' = looks similar but is the wrong shot.",
+  "segments": [
+    {"file": "raw_footage.mp4", "start": 0.0,    "end": 10.0,   "label": "Restaurant dining room interior (empty tables)"},
+    {"file": "raw_footage.mp4", "start": 10.0,   "end": 22.0,   "label": "Street with parked bicycles, red café umbrella, cyclists"},
+    {"file": "raw_footage.mp4", "start": 22.0,   "end": 34.5,   "label": "Espresso pouring from machine into shot glass"},
+    {"file": "raw_footage.mp4", "start": 34.5,   "end": 44.5,   "label": "Latte art pour, heavily out of focus"},
+    {"file": "raw_footage.mp4", "start": 44.5,   "end": 54.5,   "label": "Extreme close-up of chocolate-chip cookies"},
+    {"file": "raw_footage.mp4", "start": 54.5,   "end": 68.5,   "label": "French press poured at outdoor table; owner's voice: 'Welcome to Bean and Bloom...' (58.45-62.41)"},
+    {"file": "raw_footage.mp4", "start": 68.5,   "end": 78.5,   "label": "People laughing in a bar, far too dark"},
+    {"file": "raw_footage.mp4", "start": 78.5,   "end": 90.5,   "label": "Tea poured into glass cup on black background"},
+    {"file": "raw_footage.mp4", "start": 90.5,   "end": 100.5,  "label": "Latte art pour, sharp but handheld/shaky"},
+    {"file": "raw_footage.mp4", "start": 100.5,  "end": 110.5,  "label": "Concert crowd with raised hands and stage light"},
+    {"file": "raw_footage.mp4", "start": 110.5,  "end": 122.1,  "label": "Alley with café tables and chairs outside (outdoor seating)"},
+    {"file": "raw_footage.mp4", "start": 122.1,  "end": 132.8,  "label": "Static coffee cup with spoon"},
+    {"file": "raw_footage.mp4", "start": 132.8,  "end": 144.8,  "label": "Milk poured into iced coffee glass (not latte art)"},
+    {"file": "raw_footage.mp4", "start": 144.8,  "end": 154.97, "label": "Two women chatting and smiling in a café"},
+    {"file": "raw_footage.mp4", "start": 154.97, "end": 165.87, "label": "Milk being steamed in a metal jug"},
+    {"file": "raw_footage.mp4", "start": 165.87, "end": 173.87, "label": "Pastry display case behind glass"},
+    {"file": "raw_footage.mp4", "start": 173.87, "end": 187.87, "label": "Latte art pour, sharp and steady"},
+    {"file": "raw_footage.mp4", "start": 187.87, "end": 194.64, "label": "Group raising champagne glasses, toast"},
+    {"file": "raw_footage.mp4", "start": 194.64, "end": 206.66, "label": "Coffee beans falling into a grinder"},
+    {"file": "upload_01.mp4",   "start": 0.0,    "end": 13.2,   "label": "Latte art poured into a white cup, sharp"},
+    {"file": "upload_02.mp4",   "start": 0.0,    "end": 8.0,    "label": "Barista working the espresso machine"},
+    {"file": "upload_03.mp4",   "start": 0.0,    "end": 3.0,    "label": "Wine glasses clinking, soft focus"}
+  ],
+  "shots": {
+    "S1": {"present": true, "good": [["raw_footage.mp4", 110.5, 122.1]], "ok": [["raw_footage.mp4", 10.0, 22.0]],
+           "distractor": [["raw_footage.mp4", 0.0, 10.0]]},
+    "S2": {"present": true, "good": [["raw_footage.mp4", 22.0, 34.5], ["upload_02.mp4", 0.0, 8.0]],
+           "distractor": [["raw_footage.mp4", 78.5, 90.5], ["raw_footage.mp4", 54.5, 68.5], ["raw_footage.mp4", 154.97, 165.87], ["raw_footage.mp4", 194.64, 206.66]]},
+    "S3": {"present": true, "good": [["raw_footage.mp4", 173.87, 187.87], ["upload_01.mp4", 0.0, 13.2]],
+           "ok": [["raw_footage.mp4", 90.5, 100.5]], "bad": [["raw_footage.mp4", 34.5, 44.5]],
+           "distractor": [["raw_footage.mp4", 132.8, 144.8], ["raw_footage.mp4", 154.97, 165.87], ["raw_footage.mp4", 122.1, 132.8]]},
+    "S4": {"present": true, "good": [["raw_footage.mp4", 144.8, 154.97]], "bad": [["raw_footage.mp4", 68.5, 78.5]],
+           "distractor": [["raw_footage.mp4", 100.5, 110.5]]},
+    "S5": {"present": true, "good": [["raw_footage.mp4", 165.87, 173.87]],
+           "distractor": [["raw_footage.mp4", 44.5, 54.5]]},
+    "S6": {"present": true, "audio": true, "good": [["raw_footage.mp4", 58.45, 62.41]], "key_moment": ["raw_footage.mp4", 58.45, 59.81]},
+    "S7": {"present": false},
+    "S8": {"present": true, "good": [["raw_footage.mp4", 187.87, 194.64]], "ok": [["upload_03.mp4", 0.0, 3.0]],
+           "distractor": [["raw_footage.mp4", 100.5, 110.5]]}
+  },
+  "ai_shot_mapping": {
+    "_note": "AI-planned shots are mapped to the reference concepts by keyword so the same labels can score them.",
+    "rules": [
+      ["ribbon", ["S7"]], ["toast|glass|cheers", ["S8"]], ["welcom|speech|owner", ["S6"]], ["pastr|cake|croissant", ["S5"]],
+      ["customer|guest|people", ["S4"]], ["latte", ["S3", "S2"]], ["coffee|espresso|barista", ["S2", "S3"]],
+      ["exterior|outside|street|storefront|outdoor", ["S1"]]
+    ]
+  }
+}

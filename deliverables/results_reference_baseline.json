@@ -1,0 +1,223 @@
+{
+  "project": "Bean & Bloom grand opening",
+  "source_files": [
+    "raw_footage.mp4",
+    "upload_01.mp4",
+    "upload_02.mp4",
+    "upload_03.mp4"
+  ],
+  "shots": [
+    {
+      "shot_id": "S1",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 111.52,
+        "end": 114.52,
+        "confidence": 0.278,
+        "quality": {
+          "sharpness": 1.0,
+          "brightness": 1.0,
+          "stability": 0.957,
+          "overall": 0.991
+        },
+        "reason": "Looks like “Wide shot of the café from outside: the street and the outdoor seating.”; sharp, well lit, steady"
+      },
+      "alternatives": []
+    },
+    {
+      "shot_id": "S2",
+      "status": "found",
+      "best": {
+        "file": "upload_02.mp4",
+        "start": 4.0,
+        "end": 7.0,
+        "confidence": 0.369,
+        "quality": {
+          "sharpness": 0.992,
+          "brightness": 0.607,
+          "stability": 0.798,
+          "overall": 0.819
+        },
+        "reason": "Looks like “Espresso being made at the coffee machine.”; sharp, dim, steady"
+      },
+      "alternatives": []
+    },
+    {
+      "shot_id": "S3",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 174.53,
+        "end": 178.53,
+        "confidence": 0.398,
+        "quality": {
+          "sharpness": 0.905,
+          "brightness": 1.0,
+          "stability": 0.959,
+          "overall": 0.949
+        },
+        "reason": "Looks like “Close-up of milk being poured into a coffee to create latte art.”; sharp, well lit, steady"
+      },
+      "alternatives": []
+    },
+    {
+      "shot_id": "S4",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 152.53,
+        "end": 156.53,
+        "confidence": 0.299,
+        "quality": {
+          "sharpness": 0.826,
+          "brightness": 1.0,
+          "stability": 0.738,
+          "overall": 0.869
+        },
+        "reason": "Looks like “Customers chatting and smiling at a table inside the café.”; sharp, well lit, steady"
+      },
+      "alternatives": []
+    },
+    {
+      "shot_id": "S5",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 166.03,
+        "end": 169.03,
+        "confidence": 0.351,
+        "quality": {
+          "sharpness": 1.0,
+          "brightness": 0.985,
+          "stability": 0.928,
+          "overall": 0.98
+        },
+        "reason": "Looks like “A look across the pastries in the display case.”; sharp, well lit, steady"
+      },
+      "alternatives": []
+    },
+    {
+      "shot_id": "S6",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 170.03,
+        "end": 175.03,
+        "confidence": 0.227,
+        "quality": {
+          "sharpness": 0.989,
+          "brightness": 0.996,
+          "stability": 0.829,
+          "overall": 0.96
+        },
+        "reason": "Looks like “The owner welcomes everyone to the grand opening. We need the moment they say the welcome line.”; sharp, well lit, steady"
+      },
+      "alternatives": []
+    },
+    {
+      "shot_id": "S7",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 95.52,
+        "end": 98.52,
+        "confidence": 0.279,
+        "quality": {
+          "sharpness": 0.992,
+          "brightness": 1.0,
+          "stability": 0.028,
+          "overall": 0.802
+        },
+        "reason": "Looks like “The ribbon being cut at the café entrance to open the café.”; sharp, well lit, shaky"
+      },
+      "alternatives": []
+    },
+    {
+      "shot_id": "S8",
+      "status": "found",
+      "best": {
+        "file": "raw_footage.mp4",
+        "start": 191.03,
+        "end": 194.03,
+        "confidence": 0.311,
+        "quality": {
+          "sharpness": 1.0,
+          "brightness": 0.999,
+          "stability": 0.697,
+          "overall": 0.939
+        },
+        "reason": "Looks like “Guests raise their glasses together for a toast — this is the ending shot.”; sharp, well lit, a little shaky"
+      },
+      "alternatives": []
+    }
+  ],
+  "timeline": [
+    {
+      "order": 1,
+      "shot_id": "S1",
+      "file": "raw_footage.mp4",
+      "start": 111.52,
+      "end": 114.52
+    },
+    {
+      "order": 2,
+      "shot_id": "S2",
+      "file": "upload_02.mp4",
+      "start": 4.0,
+      "end": 7.0
+    },
+    {
+      "order": 3,
+      "shot_id": "S3",
+      "file": "raw_footage.mp4",
+      "start": 174.53,
+      "end": 178.53
+    },
+    {
+      "order": 4,
+      "shot_id": "S4",
+      "file": "raw_footage.mp4",
+      "start": 152.53,
+      "end": 156.53
+    },
+    {
+      "order": 5,
+      "shot_id": "S5",
+      "file": "raw_footage.mp4",
+      "start": 166.03,
+      "end": 169.03
+    },
+    {
+      "order": 6,
+      "shot_id": "S6",
+      "file": "raw_footage.mp4",
+      "start": 170.03,
+      "end": 175.03
+    },
+    {
+      "order": 7,
+      "shot_id": "S7",
+      "file": "raw_footage.mp4",
+      "start": 95.52,
+      "end": 98.52
+    },
+    {
+      "order": 8,
+      "shot_id": "S8",
+      "file": "raw_footage.mp4",
+      "start": 191.03,
+      "end": 194.03
+    }
+  ],
+  "processing": {
+    "seconds": 637.3,
+    "machine": "AMD Ryzen 5 5600H with Radeon Graphics, 6 cores / 12 threads, 15 GB RAM, no GPU (CPU only)",
+    "models": [
+      "OpenCLIP ViT-B-16 (laion2b_s34b_b88k)",
+      "faster-whisper small (int8, CPU)"
+    ],
+    "approach": "baseline",
+    "shot_list": "OnSpotly reference shot list"
+  }
+}

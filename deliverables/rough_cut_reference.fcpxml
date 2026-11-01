@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fcpxml>
+<fcpxml version="1.9">
+  <resources>
+    <format id="r1" name="FFVideoFormat720p30" frameDuration="1/30s" width="1280" height="720"/>
+    <asset id="r2" name="raw_footage.mp4" start="0s" duration="6200/30s" hasVideo="1" hasAudio="1" format="r1" audioSources="1" audioChannels="2">
+      <media-rep kind="original-media" src="file:///C:/kotha_pulse_folder/Unarchive/onspotly-assignment/data/cache/objects/projects/30c08ddb6e6c4cf3b42ecc183b9029ec/footage/raw_footage.mp4"/>
+    </asset>
+  </resources>
+  <library>
+    <event name="Bean &amp; Bloom grand opening">
+      <project name="Bean &amp; Bloom grand opening - rough cut">
+        <sequence format="r1" duration="750/30s" tcStart="0s" tcFormat="NDF" audioLayout="stereo" audioRate="48k">
+          <spine>
+            <asset-clip ref="r2" name="Café exterior" offset="0/30s" start="3513/30s" duration="90/30s" format="r1"/>
+            <asset-clip ref="r2" name="Barista making coffee" offset="90/30s" start="708/30s" duration="90/30s" format="r1"/>
+            <asset-clip ref="r2" name="Latte art close-up" offset="180/30s" start="5459/30s" duration="120/30s" format="r1"/>
+            <asset-clip ref="r2" name="Happy customers" offset="300/30s" start="4362/30s" duration="120/30s" format="r1"/>
+            <asset-clip ref="r2" name="Pastry display" offset="420/30s" start="4994/30s" duration="90/30s" format="r1"/>
+            <asset-clip ref="r2" name="Owner welcomes guests" offset="510/30s" start="1744/30s" duration="150/30s" format="r1"/>
+            <asset-clip ref="r2" name="Celebration toast" offset="660/30s" start="5654/30s" duration="90/30s" format="r1"/>
+          </spine>
+        </sequence>
+      </project>
+    </event>
+  </library>
+</fcpxml>
