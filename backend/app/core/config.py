@@ -54,7 +54,9 @@ class Settings:
     openai_model: str = field(default_factory=lambda: _env("OPENAI_MODEL", "gpt-4.1"))
 
     admin_password: str = field(default_factory=lambda: _env("ADMIN_PASSWORD"))
-    secret_key: str = field(default_factory=lambda: _env("SECRET_KEY", "onspotly-dev-secret"))
+    # Without SECRET_KEY a random key is generated per server start (admin logins expire on restart),
+    # never a fixed default that anyone reading the public repo could use to forge tokens.
+    secret_key: str = field(default_factory=lambda: _env("SECRET_KEY") or __import__("secrets").token_urlsafe(48))
 
     # Vision / speech models.
     clip_model: str = field(default_factory=lambda: _env("CLIP_MODEL", "ViT-B-16"))
