@@ -147,6 +147,56 @@ export function ClipPlayer({ src, poster, start, end, className, autoPlay = fals
   )
 }
 
+/** Numbered pagination with prev/next; collapses long ranges with ellipses. */
+export function Pagination({ page, pages, total, onChange, label = 'items' }) {
+  if (pages <= 1) return total ? <p className="text-center text-xs text-muted">{total} {label}</p> : null
+  const nums = []
+  for (let p = 1; p <= pages; p++) {
+    if (p === 1 || p === pages || Math.abs(p - page) <= 1) nums.push(p)
+    else if (nums.at(-1) !== '…') nums.push('…')
+  }
+  const btn = 'grid h-9 min-w-9 place-items-center rounded-lg px-2 text-sm font-semibold transition disabled:opacity-40'
+  return (
+    <nav className="flex flex-col items-center gap-2 sm:flex-row sm:justify-between" aria-label="Pagination">
+      <p className="text-xs text-muted">Page {page} of {pages} · {total} {label}</p>
+      <div className="flex items-center gap-1">
+        <button className={clsx(btn, 'border border-line bg-white hover:border-ink/30')} disabled={page <= 1} onClick={() => onChange(page - 1)} aria-label="Previous page">‹</button>
+        {nums.map((n, i) => n === '…'
+          ? <span key={`e${i}`} className="px-1 text-muted">…</span>
+          : <button key={n} onClick={() => onChange(n)} aria-current={n === page ? 'page' : undefined}
+              className={clsx(btn, n === page ? 'bg-ink text-white' : 'border border-line bg-white hover:border-ink/30')}>{n}</button>)}
+        <button className={clsx(btn, 'border border-line bg-white hover:border-ink/30')} disabled={page >= pages} onClick={() => onChange(page + 1)} aria-label="Next page">›</button>
+      </div>
+    </nav>
+  )
+}
+
+const round1 = (v) => Math.round(v * 10) / 10
+
+export function Trim({ label, value, onChange, min, max }) {
+  return (
+    <div>
+      <span className="label mb-1">{label}</span>
+      <div className="flex items-center rounded-xl border border-line bg-white">
+        <button type="button" aria-label={`${label} earlier`} className="grid h-9 w-9 place-items-center text-muted hover:text-ink" onClick={() => onChange(Math.max(min, round1(value - 0.5)))}>−</button>
+        <input type="number" step={0.1} className="w-full min-w-0 bg-transparent text-center text-sm tabular-nums outline-none" value={value}
+          onChange={(e) => onChange(Math.min(max, Math.max(min, Number(e.target.value))))} />
+        <button type="button" aria-label={`${label} later`} className="grid h-9 w-9 place-items-center text-muted hover:text-ink" onClick={() => onChange(Math.min(max, round1(value + 0.5)))}>+</button>
+      </div>
+    </div>
+  )
+}
+
+export function Slider({ label, value, onChange, min = 0, max = 1, step = 0.05, fmt = (v) => `${Math.round(v * 100)}%`, disabled }) {
+  return (
+    <label className={clsx('block', disabled && 'opacity-50')}>
+      <span className="flex items-center justify-between text-xs font-semibold text-muted"><span>{label}</span><span className="tabular-nums text-ink">{fmt(value)}</span></span>
+      <input type="range" min={min} max={max} step={step} value={value} disabled={disabled}
+        onChange={(e) => onChange(Number(e.target.value))} className="mt-1.5 w-full accent-brand" />
+    </label>
+  )
+}
+
 export function Segmented({ value, onChange, options }) {
   return (
     <div className="inline-flex rounded-xl border border-line bg-white p-1">

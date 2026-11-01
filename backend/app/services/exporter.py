@@ -74,22 +74,32 @@ def _has_audio(path: Path) -> bool:
     return probe(path)["has_audio"]
 
 
+def clip_volume(c: dict, has_music: bool) -> float:
+    """Original-sound level of a clip. Explicit per-clip volume/mute from the editor wins;
+    otherwise ambient sound is lowered under music except for shots that need their audio."""
+    if c.get("mute"):
+        return 0.0
+    if c.get("volume") is not None:
+        return float(c["volume"])
+    return 1.0 if (not has_music or c.get("needs_audio")) else 0.12
+
+
 def render_mp4(clips: list[dict], sources: dict[str, Path], out: Path, *, aspect: str = "16:9",
-               crossfade: float = 0.0, title: str = "", music: Path | None = None,
-               music_volume: float = 0.5, progress: Callable[[float, str], None] = lambda p, m: None) -> dict:
-    """clips: [{file, start, end, needs_audio}] in order. Returns {duration, size_bytes}."""
+               crossfade: float = 0.0, title: str = "", title_seconds: float = 3.0,
+               music: Path | None = None, music_volume: float = 0.5, music_offset: float = 0.0,
+               duck: bool = True, progress: Callable[[float, str], None] = lambda p, m: None) -> dict:
+    """clips: [{file, start, end, needs_audio, volume?, mute?}] in order. Returns {duration, size_bytes}."""
     if not clips:
         raise ValueError("Nothing to render: the timeline is empty")
     W, H = SIZES.get(aspect, SIZES["16:9"])
     work = out.parent / f"_{out.stem}_parts"
     work.mkdir(parents=True, exist_ok=True)
     seg_paths, durs = [], []
-    # When music is added, original sound is ducked except for shots that need their audio.
     for i, c in enumerate(clips):
         progress(0.05 + 0.6 * i / len(clips), f"Cutting clip {i + 1}/{len(clips)}")
         src = sources[c["file"]]
         dur = max(0.2, float(c["end"]) - float(c["start"]))
-        vol = 1.0 if (music is None or c.get("needs_audio")) else 0.12
+        vol = clip_volume(c, music is not None)
         vf = (f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},"
               f"fps={FPS},format=yuv420p,setsar=1")
         seg = work / f"seg_{i:03d}.mp4"
@@ -135,19 +145,21 @@ def render_mp4(clips: list[dict], sources: dict[str, Path], out: Path, *, aspect
         txt.write_text(title, encoding="utf-8")
         fontarg = f"fontfile='{_ff_path(font)}':" if font else ""
         size = int(min(W, H) * 0.075)
-        t0 = max(0.0, total - 3.0)
+        t0 = max(0.0, total - max(0.5, title_seconds))
         vf_final.append(
             f"drawtext={fontarg}textfile='{_ff_path(txt)}':fontcolor=white:fontsize={size}:"
             f"box=1:boxcolor=0xE11D2E@0.85:boxborderw={size // 3}:x=(w-text_w)/2:y=h*0.78:"
             f"enable='gte(t,{t0:.2f})':alpha='min(1,(t-{t0:.2f})/0.4)'")
     if music is not None:
-        inputs += ["-stream_loop", "-1", "-i", str(music)]
+        # -ss before the looped input = where in the song the reel starts.
+        inputs += ["-stream_loop", "-1", "-ss", f"{max(0.0, music_offset):.3f}", "-i", str(music)]
         fade_at = max(0.0, total - 1.5)
         # Duck the music to 20 % while a shot that needs its own audio plays (e.g. a spoken line).
         starts = [sum(durs[:k]) - k * xf for k in range(len(durs))]
-        spans = [(starts[k], starts[k] + durs[k]) for k, c in enumerate(clips) if c.get("needs_audio")]
-        duck = "+".join(f"between(t,{a:.2f},{b:.2f})" for a, b in spans)
-        vol = f"volume='{music_volume}*if({duck},0.2,1)':eval=frame" if duck else f"volume={music_volume}"
+        spans = [(starts[k], starts[k] + durs[k]) for k, c in enumerate(clips)
+                 if duck and c.get("needs_audio") and not c.get("mute")]
+        duck_expr = "+".join(f"between(t,{a:.2f},{b:.2f})" for a, b in spans)
+        vol = f"volume='{music_volume}*if({duck_expr},0.2,1)':eval=frame" if duck_expr else f"volume={music_volume}"
         af = (f"[1:a]atrim=0:{total:.3f},asetpts=PTS-STARTPTS,{vol},afade=t=out:st={fade_at:.2f}:d=1.5[m];"
               f"[0:a][m]amix=inputs=2:duration=first:normalize=0,alimiter=limit=0.95[a]")
     cmd = [FFMPEG, "-y", *inputs]

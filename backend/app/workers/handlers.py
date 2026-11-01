@@ -16,6 +16,15 @@ from app.services.tracking import log_activity, record_llm, record_storage
 from app.workers.jobs import JobContext, handler, heavy_lock
 
 
+def slug(text: str, limit: int = 40) -> str:
+    """'Bean & Bloom grand opening' -> 'Bean-and-Bloom-grand-opening' (safe, readable file names)."""
+    import re
+
+    text = text.replace("&", " and ")
+    words = re.findall(r"[A-Za-z0-9]+", text)
+    return "-".join(words)[:limit].strip("-") or "untitled"
+
+
 def _analyze_asset(ctx: JobContext, asset_id: str, lo: float, hi: float) -> None:
     with session_scope() as db:
         a = db.get(Asset, asset_id)
@@ -119,6 +128,9 @@ def render(ctx: JobContext) -> dict:
         clips = list(run.timeline)
         project = run.project
         pname, aspect = project.name, opts.get("aspect") or project.aspect_ratio
+        sl = db.get(ShotList, run.shot_list_id)
+        cut_label = sl.name if sl else "Cut"
+        version = 1 + sum(1 for e in project.exports if e.kind == "mp4")
         files = {a.filename: a.storage_key for a in project.assets}
         music_key = None
         if opts.get("music_asset_id"):
@@ -131,18 +143,26 @@ def render(ctx: JobContext) -> dict:
     ctx.step("render")
     out = settings.work_dir / f"{ctx.job_id}.mp4"
     info = exporter.render_mp4(clips, sources, out, aspect=aspect, crossfade=float(opts.get("crossfade", 0)),
-                               title=opts.get("title", ""), music=music,
-                               music_volume=float(opts.get("music_volume", 0.5)),
+                               title=opts.get("title", ""), title_seconds=float(opts.get("title_seconds", 3)),
+                               music=music, music_volume=float(opts.get("music_volume", 0.5)),
+                               music_offset=float(opts.get("music_offset", 0)), duck=bool(opts.get("duck", True)),
                                progress=lambda p, m: ctx.progress(0.02 + 0.9 * p, m))
     ctx.step("upload")
     ctx.progress(0.95, "Saving video", force=True)
-    safe = "".join(ch if ch.isalnum() else "_" for ch in pname).strip("_")[:40] or "reel"
-    key = f"projects/{ctx.project_id}/exports/{ctx.job_id}.mp4"
+    from datetime import date
+
+    filename = (f"{slug(pname, 40)}_{slug(cut_label, 30)}_{aspect.replace(':', 'x')}_"
+                f"v{version}_{date.today().isoformat()}.mp4")
+    key = f"projects/{ctx.project_id}/exports/v{version}_{ctx.job_id[:8]}.mp4"
     storage.put(key, out)
+    music_name = None
+    if music_key:
+        music_name = Path(music_key).name
     with session_scope() as db:
         exp = Export(project_id=ctx.project_id, run_id=ctx.params["run_id"], kind="mp4",
-                     filename=f"{safe}_{aspect.replace(':', 'x')}.mp4", storage_key=key,
-                     size_bytes=info["size_bytes"], options={**opts, "aspect": aspect, "duration": info["duration"]})
+                     filename=filename, storage_key=key, size_bytes=info["size_bytes"],
+                     options={**opts, "aspect": aspect, "duration": info["duration"], "version": version,
+                              "cut": cut_label, "clips": len(clips), "music_name": music_name})
         db.add(exp)
         db.flush()
         record_storage(db, ctx.project_id, info["size_bytes"], "render")

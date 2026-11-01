@@ -14,7 +14,7 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel, Field
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.core.config import settings
 from app.db.models import Asset, Export, FinderRun, Job, Project, ShotList
@@ -75,7 +75,12 @@ def _project(p: Project, full: bool = False) -> dict:
         d["shot_lists"] = [_shot_list(s) for s in sorted(p.shot_lists, key=lambda s: s.created_at)]
         d["runs"] = [_run(r) for r in sorted(p.runs, key=lambda r: r.created_at)]
         d["jobs"] = [_job(j) for j in sorted(p.jobs, key=lambda j: j.created_at, reverse=True)[:20]]
-        d["exports"] = [_export(e) for e in sorted(p.exports, key=lambda e: e.created_at, reverse=True)]
+        videos = sorted((e for e in p.exports if e.kind == "mp4"), key=lambda e: e.created_at, reverse=True)
+        d["version_count"] = len(videos)
+        d["latest_versions"] = [_export(e) for e in videos[:3]]  # full history: /projects/{id}/versions
+    else:
+        vids = [e for e in p.exports if e.kind == "mp4"]
+        d["version_count"] = len(vids)
     return d
 
 
@@ -101,9 +106,60 @@ class ProjectPatch(BaseModel):
     aspect_ratio: str | None = None
 
 
+def _page(items_query, db: Session, page: int, page_size: int, serialize) -> dict:
+    from sqlalchemy import func
+
+    total = db.scalar(select(func.count()).select_from(items_query.order_by(None).options().subquery())) or 0
+    page_size = max(1, min(100, page_size))
+    pages = max(1, -(-total // page_size))
+    page = max(1, min(page, pages))
+    rows = db.scalars(items_query.offset((page - 1) * page_size).limit(page_size))
+    return {"items": [serialize(r) for r in rows], "total": total, "page": page, "pages": pages, "page_size": page_size}
+
+
 @router.get("/projects")
-def list_projects(db: Session = Depends(get_db)):
-    return [_project(p) for p in db.scalars(select(Project).order_by(Project.created_at.desc()))]
+def list_projects(page: int = 1, page_size: int = 9, q: str = "", status: str = "", db: Session = Depends(get_db)):
+    """Paginated, searchable project list."""
+    query = select(Project).order_by(Project.created_at.desc()).options(
+        selectinload(Project.assets), selectinload(Project.exports))
+    if q.strip():
+        like = f"%{q.strip()}%"
+        query = query.where(Project.name.ilike(like) | Project.brief.ilike(like))
+    if status:
+        query = query.where(Project.status == status)
+    return _page(query, db, page, page_size, _project)
+
+
+@router.get("/projects/{project_id}/versions")
+def list_versions(project_id: str, page: int = 1, page_size: int = 6, run_id: str = "", db: Session = Depends(get_db)):
+    """Rendered video versions of a project, newest first, paginated; optionally for one cut."""
+    _get(db, Project, project_id)
+    query = select(Export).where(Export.project_id == project_id, Export.kind == "mp4").order_by(Export.created_at.desc())
+    if run_id:
+        query = query.where(Export.run_id == run_id)
+    out = _page(query, db, page, page_size, _export)
+    out["cuts"] = [{"run_id": r.run_id, "count": n} for r, n in _version_counts(db, project_id)]
+    return out
+
+
+def _version_counts(db: Session, project_id: str):
+    from collections import Counter
+
+    exps = list(db.scalars(select(Export).where(Export.project_id == project_id, Export.kind == "mp4")))
+    counts = Counter(e.run_id for e in exps)
+    first = {e.run_id: e for e in exps}
+    return [(first[k], n) for k, n in counts.items()]
+
+
+@router.delete("/exports/{export_id}")
+def delete_export(export_id: str, db: Session = Depends(get_db)):
+    e = _get(db, Export, export_id)
+    if e.storage_key:
+        storage.delete(e.storage_key)
+    log_activity(db, "export.deleted", f"Deleted {e.filename}", e.project_id)
+    db.delete(e)
+    db.commit()
+    return {"ok": True}
 
 
 @router.post("/projects")
@@ -116,9 +172,17 @@ def create_project(body: ProjectIn, db: Session = Depends(get_db)):
     return _project(p, full=True)
 
 
+_FULL = [selectinload(Project.assets), selectinload(Project.shot_lists), selectinload(Project.runs),
+         selectinload(Project.jobs), selectinload(Project.exports)]
+
+
 @router.get("/projects/{project_id}")
 def get_project(project_id: str, db: Session = Depends(get_db)):
-    return _project(_get(db, Project, project_id), full=True)
+    # Load every relationship in one round trip each (the DB may be far away), not lazily per access.
+    p = db.scalars(select(Project).where(Project.id == project_id).options(*_FULL)).first()
+    if p is None:
+        raise HTTPException(404, "Project not found")
+    return _project(p, full=True)
 
 
 @router.patch("/projects/{project_id}")
@@ -250,8 +314,11 @@ def reanalyze(project_id: str, db: Session = Depends(get_db)):
 @router.get("/assets/{asset_id}/stream")
 def stream_asset(asset_id: str, db: Session = Depends(get_db)):
     """Video preview (Starlette's FileResponse supports HTTP range requests for seeking)."""
+    import mimetypes
+
     a = _get(db, Asset, asset_id)
-    return FileResponse(storage.local_path(a.storage_key), media_type="video/mp4")
+    path = storage.local_path(a.storage_key)
+    return FileResponse(path, media_type=mimetypes.guess_type(path.name)[0] or "application/octet-stream")
 
 
 @router.get("/assets/{asset_id}/thumb")
@@ -408,10 +475,23 @@ class TimelineItem(BaseModel):
     start: float = Field(ge=0)
     end: float = Field(gt=0)
     needs_audio: bool = False
+    volume: float | None = Field(None, ge=0, le=2)  # original-sound level; None = automatic
+    mute: bool = False
 
 
 class TimelineIn(BaseModel):
     timeline: list[TimelineItem]
+
+
+class MixIn(BaseModel):
+    """Editor mix settings saved with a cut: music track, title track, transitions."""
+    music_asset_id: str | None = None
+    music_volume: float = Field(0.5, ge=0, le=1.5)
+    music_offset: float = Field(0.0, ge=0)
+    duck: bool = True
+    title: str = Field("", max_length=80)
+    title_seconds: float = Field(3.0, ge=0.5, le=15)
+    crossfade: float = Field(0.0, ge=0, le=1.0)
 
 
 @router.get("/runs/{run_id}")
@@ -433,12 +513,23 @@ def update_timeline(run_id: str, body: TimelineIn, db: Session = Depends(get_db)
     return _run(run)
 
 
+@router.put("/runs/{run_id}/mix")
+def update_mix(run_id: str, body: MixIn, db: Session = Depends(get_db)):
+    run = _get(db, FinderRun, run_id)
+    run.results = {**(run.results or {}), "mix": body.model_dump()}  # reassign so the JSON change is saved
+    db.commit()
+    return _run(run)
+
+
 class RenderIn(BaseModel):
     aspect: str | None = None
     crossfade: float = Field(0.0, ge=0, le=1.0)
     title: str = ""
+    title_seconds: float = Field(3.0, ge=0.5, le=15)
     music_asset_id: str | None = None
     music_volume: float = Field(0.5, ge=0, le=1.5)
+    music_offset: float = Field(0.0, ge=0)
+    duck: bool = True
 
 
 @router.post("/runs/{run_id}/render")
@@ -457,20 +548,23 @@ def _sources(run: FinderRun) -> dict[str, Path]:
 @router.get("/runs/{run_id}/download/{kind}")
 def download_run_file(run_id: str, kind: str, db: Session = Depends(get_db)):
     """Editor files generated from the current timeline: json, csv, edl, fcpxml, results."""
+    from app.workers.handlers import slug
+
     run = _get(db, FinderRun, run_id)
     p = run.project
-    safe = "".join(ch if ch.isalnum() else "_" for ch in p.name).strip("_")[:40] or "project"
+    sl = db.get(ShotList, run.shot_list_id)
+    safe = f"{slug(p.name, 40)}_{slug(sl.name if sl else 'cut', 30)}"
     aspect = p.aspect_ratio
     if kind == "json":
         body, mime, fname = exporter.clip_list_json(p.name, run.timeline, aspect), "application/json", f"{safe}_clips.json"
     elif kind == "csv":
         body, mime, fname = exporter.clip_list_csv(run.timeline), "text/csv", f"{safe}_clips.csv"
     elif kind == "edl":
-        body, mime, fname = exporter.edl(p.name, run.timeline), "text/plain", f"{safe}.edl"
+        body, mime, fname = exporter.edl(p.name, run.timeline), "text/plain", f"{safe}_rough_cut.edl"
     elif kind == "fcpxml":
         durs = {a.filename: a.duration for a in p.assets}
         body, mime, fname = (exporter.fcpxml(p.name, run.timeline, _sources(run), durs),
-                             "application/xml", f"{safe}.fcpxml")
+                             "application/xml", f"{safe}_rough_cut.fcpxml")
     elif kind == "results":
         _, body = results_payload(run_id)
         mime, fname = "application/json", f"{safe}_shot_finder_results.json"

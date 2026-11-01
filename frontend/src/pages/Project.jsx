@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { ChevronDown, Trash2, Film, ListChecks, Clapperboard, Download } from 'lucide-react'
+import { ChevronDown, Trash2, Film, ListChecks, Clapperboard, Download, History } from 'lucide-react'
 import clsx from 'clsx'
 import { api } from '../api.js'
 import { StatusChip } from '../components/ui.jsx'
@@ -10,12 +10,14 @@ import FootageStep from '../components/project/FootageStep.jsx'
 import ShotListStep from '../components/project/ShotListStep.jsx'
 import EditorStep from '../components/project/EditorStep.jsx'
 import ExportStep from '../components/project/ExportStep.jsx'
+import VersionsStep from '../components/project/VersionsStep.jsx'
 
 const TABS = [
   { id: 'footage', label: 'Footage', icon: Film },
   { id: 'shots', label: 'Shot list', icon: ListChecks },
   { id: 'editor', label: 'Editor', icon: Clapperboard },
   { id: 'export', label: 'Export', icon: Download },
+  { id: 'versions', label: 'Versions', icon: History },
 ]
 
 export default function Project() {
@@ -86,7 +88,8 @@ export default function Project() {
           return s
         }, { replace: true })} />}
         {tab === 'editor' && <EditorStep project={p} refresh={refresh} next={() => setTab('export')} goShots={() => setTab('shots')} />}
-        {tab === 'export' && <ExportStep project={p} refresh={refresh} goEditor={() => setTab('editor')} />}
+        {tab === 'export' && <ExportStep project={p} refresh={refresh} goEditor={() => setTab('editor')} goVersions={() => setTab('versions')} />}
+        {tab === 'versions' && <VersionsStep project={p} goExport={() => setTab('export')} />}
       </div>
     </div>
   )

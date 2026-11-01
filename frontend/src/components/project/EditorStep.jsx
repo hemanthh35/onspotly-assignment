@@ -7,7 +7,8 @@ import { GripVertical, Save, ArrowRight, AlertTriangle, Replace, Minus, Plus, X,
 import clsx from 'clsx'
 import { useSearchParams } from 'react-router-dom'
 import { api, fmtTime, pickRun, streamUrl, thumbUrl } from '../../api.js'
-import { ClipPlayer, Empty, ScoreBar } from '../ui.jsx'
+import { ClipPlayer, Empty, ScoreBar, Segmented } from '../ui.jsx'
+import TimelinePanel, { DEFAULT_MIX } from './TimelinePanel.jsx'
 
 const round = (v) => Math.round(v * 10) / 10
 
@@ -117,7 +118,14 @@ export default function EditorStep({ project, refresh, next, goShots }) {
     useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 6 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }))
 
-  useEffect(() => { if (!dirty) setTimeline(run?.timeline || []) }, [run?.id, run?.updated_at]) // eslint-disable-line
+  const [mix, setMixRaw] = useState({ ...DEFAULT_MIX, ...(run?.results?.mix || {}) })
+  const [view, setView] = useState('timeline')
+  const setMix = (fn) => { setMixRaw(fn); setDirty(true) }
+  const setTimelineDirty = (fn) => { setTimeline(fn); setDirty(true) }
+
+  useEffect(() => {
+    if (!dirty) { setTimeline(run?.timeline || []); setMixRaw({ ...DEFAULT_MIX, ...(run?.results?.mix || {}) }) }
+  }, [run?.id, run?.updated_at]) // eslint-disable-line
 
   const assets = useMemo(() => Object.fromEntries(project.assets.map((a) => [a.filename, a])), [project.assets])
   const shotList = project.shot_lists.find((s) => s.id === run?.shot_list_id)
@@ -183,23 +191,46 @@ export default function EditorStep({ project, refresh, next, goShots }) {
 
   async function save(quiet = false) {
     await api.saveTimeline(run.id, timeline)
+    await api.saveMix(run.id, mix)
     setDirty(false)
     if (!quiet) toast.success('Cut saved')
     refresh()
   }
 
+  const toolbar = (
+    <div className="flex flex-wrap items-center gap-2">
+      {runs.length > 1 && (
+        <select className="input w-full py-2 sm:w-auto sm:max-w-xs" value={run.id} onChange={(e) => { if (!dirty || confirm('Discard unsaved edits?')) { setDirty(false); setRunId(e.target.value) } }}>
+          {runs.map((r) => {
+            const sl = project.shot_lists.find((s) => s.id === r.shot_list_id)
+            return <option key={r.id} value={r.id}>{sl?.name || 'Shot list'} · {r.approach} · {new Date(r.created_at).toLocaleTimeString()}</option>
+          })}
+        </select>
+      )}
+      <Segmented value={view} onChange={setView} options={[{ value: 'timeline', label: 'Timeline' }, { value: 'cards', label: 'Cards' }]} />
+      {view === 'timeline' && (
+        <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
+          <span className={clsx('font-display text-lg font-bold tabular-nums', Math.abs(total - project.target_seconds) > 3 ? 'text-amber-600' : 'text-ink')}>{total.toFixed(1)}s</span>
+          {Math.abs(total - project.target_seconds) > 0.5 && timeline.length > 0 && (
+            <button className="btn-ghost btn-sm" onClick={fitToTarget}><Scaling size={13} /> Fit to {project.target_seconds}s</button>
+          )}
+          <button className="btn-ghost btn-sm" disabled={!dirty} onClick={() => save()}><Save size={13} /> {dirty ? 'Save' : 'Saved'}</button>
+          <button className="btn-primary btn-sm" onClick={async () => { if (dirty) await save(true); next() }} disabled={!timeline.length}>Export <ArrowRight size={13} /></button>
+        </div>
+      )}
+    </div>
+  )
+
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
+    <div className="space-y-4">
+      {toolbar}
+      {view === 'timeline' && (
+        <TimelinePanel project={project} run={run} timeline={timeline} setTimeline={setTimelineDirty} mix={mix} setMix={setMix}
+          assets={assets} results={results} refresh={refresh} />
+      )}
+    <div className={clsx('grid gap-6', view === 'cards' && 'lg:grid-cols-[1fr_300px]')}>
       <div className="min-w-0 space-y-4">
-        {runs.length > 1 && (
-          <select className="input w-full py-2 sm:w-auto" value={run.id} onChange={(e) => { if (!dirty || confirm('Discard unsaved edits?')) { setDirty(false); setRunId(e.target.value) } }}>
-            {runs.map((r) => {
-              const sl = project.shot_lists.find((s) => s.id === r.shot_list_id)
-              return <option key={r.id} value={r.id}>{sl?.name || 'Shot list'} · {r.approach} · {new Date(r.created_at).toLocaleTimeString()}</option>
-            })}
-          </select>
-        )}
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={({ active, over }) => {
+        {view === 'cards' && <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={({ active, over }) => {
           if (over && active.id !== over.id) {
             setTimeline((t) => arrayMove(t, t.findIndex((x) => x.shot_id === active.id), t.findIndex((x) => x.shot_id === over.id)))
             setDirty(true)
@@ -213,7 +244,7 @@ export default function EditorStep({ project, refresh, next, goShots }) {
               ))}
             </div>
           </SortableContext>
-        </DndContext>
+        </DndContext>}
 
         {missing.length > 0 && (
           <div className="space-y-3">
@@ -256,7 +287,7 @@ export default function EditorStep({ project, refresh, next, goShots }) {
         )}
       </div>
 
-      <aside className="space-y-4 lg:sticky lg:top-32 lg:self-start">
+      {view === 'cards' && <aside className="space-y-4 lg:sticky lg:top-32 lg:self-start">
         <div className="card p-4">
           <div className="flex items-baseline justify-between">
             <span className="label mb-0">Cut length</span>
@@ -278,7 +309,8 @@ export default function EditorStep({ project, refresh, next, goShots }) {
           Export <ArrowRight size={15} />
         </button>
         <p className="px-1 text-xs leading-relaxed text-muted">Drag cards to reorder. Trim with − / +, or swap to another take. Missing shots are never faked — pick a candidate only if it really works.</p>
-      </aside>
+      </aside>}
+    </div>
     </div>
   )
 }

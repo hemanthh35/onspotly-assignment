@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { Film, Plus, Clapperboard, Sparkles, ScanSearch, Scissors } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { Film, Plus, Clapperboard, Sparkles, ScanSearch, Scissors, Search } from 'lucide-react'
 import { api } from '../api.js'
-import { Empty, StatusChip } from '../components/ui.jsx'
+import { Empty, Pagination, StatusChip } from '../components/ui.jsx'
 
 const STEPS = [
   { icon: Sparkles, title: 'Brief → shot list', text: 'AI turns a customer’s words into an ordered, editable shot list.' },
@@ -11,7 +12,18 @@ const STEPS = [
 ]
 
 export default function Projects() {
-  const { data, isLoading } = useQuery({ queryKey: ['projects'], queryFn: api.projects, refetchInterval: 5000 })
+  const [params, setParams] = useSearchParams()
+  const page = Number(params.get('page') || 1)
+  const q = params.get('q') || ''
+  const [search, setSearch] = useState(q)
+  useEffect(() => {
+    const t = setTimeout(() => setParams((s) => { search ? s.set('q', search) : s.delete('q'); s.delete('page'); return s }, { replace: true }), 300)
+    return () => clearTimeout(t)
+  }, [search]) // eslint-disable-line
+  const { data: res, isLoading } = useQuery({
+    queryKey: ['projects', page, q], queryFn: () => api.projects({ page, q }), refetchInterval: 8000, placeholderData: keepPreviousData,
+  })
+  const data = res?.items
   return (
     <div>
       <section className="relative overflow-hidden rounded-3xl bg-ink px-6 py-10 text-white sm:px-10 sm:py-14">
@@ -35,9 +47,12 @@ export default function Projects() {
         </div>
       </section>
 
-      <div className="mb-4 mt-10 flex items-end justify-between">
-        <h2 className="text-xl font-bold">Projects</h2>
-        <span className="text-sm text-muted">{data?.length ?? 0} total</span>
+      <div className="mb-4 mt-10 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-xl font-bold">Projects <span className="ml-1 text-sm font-medium text-muted">{res?.total ?? 0}</span></h2>
+        <label className="flex w-full items-center gap-2 rounded-xl border border-line bg-white px-3 sm:w-72">
+          <Search size={15} className="text-muted" />
+          <input className="w-full bg-transparent py-2 text-sm outline-none" placeholder="Search projects or briefs" value={search} onChange={(e) => setSearch(e.target.value)} />
+        </label>
       </div>
 
       {isLoading ? (
@@ -45,9 +60,9 @@ export default function Projects() {
           {[0, 1, 2].map((i) => <div key={i} className="card h-32 animate-pulse bg-stone-100" />)}
         </div>
       ) : !data?.length ? (
-        <Empty icon={<Clapperboard size={22} />} title="No projects yet"
-          action={<Link to="/new" className="btn-primary"><Plus size={16} /> New reel</Link>}>
-          Create a project, upload the footage and paste the customer’s brief.
+        <Empty icon={<Clapperboard size={22} />} title={q ? 'No matching projects' : 'No projects yet'}
+          action={!q && <Link to="/new" className="btn-primary"><Plus size={16} /> New reel</Link>}>
+          {q ? `Nothing matches “${q}”.` : 'Create a project, upload the footage and paste the customer’s brief.'}
         </Empty>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -64,11 +79,14 @@ export default function Projects() {
               <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
                 <span>{p.asset_count} clips · {Math.round(p.footage_seconds)}s footage</span>
                 <span>{p.target_seconds}s · {p.aspect_ratio}</span>
+                {p.version_count > 0 && <span>{p.version_count} version{p.version_count > 1 ? 's' : ''}</span>}
               </div>
             </Link>
           ))}
         </div>
       )}
+      {res && <div className="mt-6"><Pagination page={res.page} pages={res.pages} total={res.total} label="projects"
+        onChange={(n) => { setParams((s) => { s.set('page', n); return s }); window.scrollTo({ top: 0, behavior: 'smooth' }) }} /></div>}
     </div>
   )
 }

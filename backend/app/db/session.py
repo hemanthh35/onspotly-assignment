@@ -12,9 +12,11 @@ class Base(DeclarativeBase):
     pass
 
 
-_engine_kwargs: dict = {"pool_pre_ping": True}
+_engine_kwargs: dict = {}
 if settings.use_supabase_db:
-    _engine_kwargs.update(pool_size=5, max_overflow=5, pool_recycle=300)
+    # No pre-ping: it costs a full network round trip per request on a remote database.
+    # Connections are recycled before Supabase's pooler would drop them instead.
+    _engine_kwargs.update(pool_size=5, max_overflow=5, pool_recycle=240)
 else:
     _engine_kwargs["connect_args"] = {"check_same_thread": False}
 

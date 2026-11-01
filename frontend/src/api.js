@@ -38,7 +38,11 @@ function upload(path, form, onProgress) {
 
 export const api = {
   health: () => request('/health'),
-  projects: () => request('/projects'),
+  projects: ({ page = 1, pageSize = 9, q = '' } = {}) =>
+    request(`/projects?page=${page}&page_size=${pageSize}&q=${encodeURIComponent(q)}`),
+  versions: (id, { page = 1, pageSize = 6, runId = '' } = {}) =>
+    request(`/projects/${id}/versions?page=${page}&page_size=${pageSize}&run_id=${runId}`),
+  deleteExport: (id) => request(`/exports/${id}`, { method: 'DELETE' }),
   project: (id) => request(`/projects/${id}`),
   createProject: (body) => request('/projects', { method: 'POST', body }),
   updateProject: (id, body) => request(`/projects/${id}`, { method: 'PATCH', body }),
@@ -67,6 +71,8 @@ export const api = {
   deleteShotList: (id) => request(`/shot-lists/${id}`, { method: 'DELETE' }),
   find: (id, approach = 'hybrid') => request(`/shot-lists/${id}/find`, { method: 'POST', body: { approach } }),
   saveTimeline: (id, timeline) => request(`/runs/${id}/timeline`, { method: 'PUT', body: { timeline } }),
+  saveMix: (id, mix) => request(`/runs/${id}/mix`, { method: 'PUT', body: mix }),
+  musicUrl: (assetId) => `${BASE}/assets/${assetId}/stream`,
   render: (id, options) => request(`/runs/${id}/render`, { method: 'POST', body: options }),
   job: (id) => request(`/jobs/${id}`),
 }
