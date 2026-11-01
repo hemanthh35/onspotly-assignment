@@ -95,6 +95,11 @@ footage ─► Analysis (once per file, cached)
 
 More detail, measured results and failures: **[docs/research_note.md](docs/research_note.md)**.
 
+**Technical blueprint (11-slide Excalidraw deck):** [`docs/architecture/onspotly_blueprint.excalidraw`](docs/architecture/onspotly_blueprint.excalidraw)
+(open at https://excalidraw.com → menu → Open). Covers architecture, analysis pipeline, shot planning,
+hybrid finder, models & stack, rendering & versions, data/jobs/cost, development journey, evaluation and
+limits. Regenerate with `python scripts/blueprint/build_blueprint.py`.
+
 ## Project structure
 
 ```

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OnSpotly Blueprint</title>
+  <style>
+    body { margin: 0; background: #e9ecef; font-family: system-ui, sans-serif; }
+    .slide { width: min(1600px, 96vw); margin: 2vw auto; background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,.12); }
+    .slide svg { width: 100%; height: auto; display: block; }
+    #status { text-align: center; padding: 12px; color: #495057; }
+  </style>
+  <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@excalidraw/excalidraw@0.17.6/dist/excalidraw.production.min.js"></script>
+</head>
+<body>
+  <div id="status">Rendering…</div>
+  <div id="slides"></div>
+  <script>
+    (async () => {
+      const scene = await (await fetch('onspotly_blueprint.excalidraw?' + Date.now())).json()
+      const frames = scene.elements.filter((e) => e.type === 'frame')
+      const params = new URLSearchParams(location.search)
+      const only = params.get('slide')
+      if (params.get('w')) document.styleSheets[0].insertRule(`.slide { width: ${params.get('w')}px !important; margin: 8px !important; }`, 0)
+      for (const [i, f] of frames.entries()) {
+        if (only && Number(only) !== i + 1) continue
+        const els = scene.elements.filter((e) => e.frameId === f.id)
+        const svg = await ExcalidrawLib.exportToSvg({
+          elements: els, files: {},
+          appState: { exportBackground: true, viewBackgroundColor: '#ffffff', exportWithDarkMode: false },
+          exportPadding: 0,
+        })
+        const div = document.createElement('div')
+        div.className = 'slide'
+        div.id = 'slide-' + (i + 1)
+        div.appendChild(svg)
+        document.getElementById('slides').appendChild(div)
+      }
+      document.getElementById('status').textContent = frames.length + ' slides'
+      window.__ready = true
+    })().catch((e) => { document.getElementById('status').textContent = 'Error: ' + e; window.__ready = 'error' })
+  </script>
+</body>
+</html>
